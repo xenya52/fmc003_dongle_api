@@ -1,24 +1,52 @@
 package com.xenya52.fmc003_rest_api.service;
 
+import com.xenya52.fmc003_rest_api.entity.dto.IoWikiResponse;
+import java.io.BufferedReader;
+import java.io.StringReader;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+/***
+ * This class is responsible for scraping the Teltonika wiki
+ * and returning the data sending parameters
+ */
 public class ScrapeTeltonikaIoWiki {
 
     // Attributes
     private String dataSendingParameters;
+    private IoWikiResponse[] dataSendingParametersJson;
 
     // Constructors
     public ScrapeTeltonikaIoWiki() {
         this.dataSendingParameters = fetchdataSendingParameters();
+        this.dataSendingParametersJson = getIoWikiResponses();
     }
 
     // Methods
     public String getDataSendingParameters() {
         return dataSendingParameters;
+    }
+
+    public String getDataSendingParametersJson() {
+        // Debugging
+        System.out.println(dataSendingParametersJson);
+
+        StringBuilder jsonList = new StringBuilder("[");
+
+        for (int i = 0; i < dataSendingParametersJson.length; i++) {
+            // Debugging
+            System.out.println(dataSendingParametersJson[i].toJson());
+
+            jsonList.append(dataSendingParametersJson[i].toJson());
+            if (i < dataSendingParametersJson.length - 1) {
+                jsonList.append(",");
+            }
+        }
+        jsonList.append("]");
+        return jsonList.toString();
     }
 
     /***
@@ -28,8 +56,96 @@ public class ScrapeTeltonikaIoWiki {
      * @return a string containing the name of the property id
      */
     public String idToName(int id) {
-        Dictionary<String, String> idAndNameDict = getIDAndName();
-        return idAndNameDict.get(String.valueOf(id));
+        String name = getIdAndName().get(String.valueOf(id));
+        return name == null ? "Property not found" : name;
+    }
+
+    /***
+     * Returns the ID of the property
+     * based on the name
+     * @param name
+     * @return a string containing the ID of the property
+     */
+    public String nameToId(String name) {
+        Dictionary<String, String> idAndName = getIdAndName();
+        java.util.Enumeration<String> keys = idAndName.keys();
+
+        while (keys.hasMoreElements()) {
+            String key = keys.nextElement();
+            String val = idAndName.get(key);
+
+            if (val.equals(name)) {
+                return key;
+            }
+        }
+        return "Property not found";
+    }
+
+    // Todo
+    private boolean doesViolatePrivacyPolicy() {
+        return false;
+    }
+
+    /***
+     * Returns the data sending parameters
+     * in JSON format
+     * @return a string containing the data sending parameters in JSON format
+     */
+    private IoWikiResponse[] getIoWikiResponses() {
+        // Debugging
+        System.out.println(dataSendingParameters);
+
+        IoWikiResponse[] ioWikiResponses = new IoWikiResponse[getIdAndName()
+            .size()];
+        try {
+            BufferedReader bufReader = new BufferedReader(
+                new StringReader(dataSendingParameters)
+            );
+            String Line = null;
+
+            while ((Line = bufReader.readLine()) != null) {
+                if (Line.contains("<tr>")) {
+                    String id = bufReader
+                        .readLine()
+                        .split(">")[1].split("<")[0];
+                    String name = bufReader
+                        .readLine()
+                        .split(">")[1].split("<")[0];
+                    String responseType = bufReader
+                        .readLine()
+                        .split(">")[1].split("<")[0];
+                    String minVal = bufReader
+                        .readLine()
+                        .split(">")[1].split("<")[0];
+                    String maxVal = bufReader
+                        .readLine()
+                        .split(">")[1].split("<")[0];
+                    String multiplier = bufReader
+                        .readLine()
+                        .split(">")[1].split("<")[0];
+                    String units = bufReader
+                        .readLine()
+                        .split(">")[1].split("<")[0];
+                    String description = bufReader
+                        .readLine()
+                        .split(">")[1].split("<")[0];
+                    IoWikiResponse ioWikiResponse = new IoWikiResponse(
+                        id,
+                        name,
+                        responseType,
+                        minVal,
+                        maxVal,
+                        multiplier,
+                        units,
+                        description
+                    );
+                    ioWikiResponses[Integer.parseInt(id)] = ioWikiResponse;
+                }
+            }
+        } catch (Exception e) {
+            // Todo AuSbAuFaEhIg
+        }
+        return ioWikiResponses;
     }
 
     /***
@@ -38,28 +154,30 @@ public class ScrapeTeltonikaIoWiki {
      * @param name
      * @return the ID of the property
      */
-    private Dictionary<String, String> getIDAndName() {
+    private Dictionary<String, String> getIdAndName() {
         Dictionary<String, String> idAndNameDict = new Hashtable<>();
-        System.out.println(dataSendingParameters);
         try {
-            String cssQuery = "tbody";
-            Document doc = Jsoup.parse(dataSendingParameters);
+            BufferedReader bufReader = new BufferedReader(
+                new StringReader(dataSendingParameters)
+            );
+            String Line = null;
 
-            Elements body = doc.select(cssQuery);
-            Elements rows = body.select("tr");
-
-            for (int i = 0; i < rows.size(); i++) {
-                Elements columns = rows.get(i).select("td");
-                if (columns.size() >= 2) {
-                    String id = columns.get(0).text().trim();
-                    String name = columns.get(1).text().trim();
-                    idAndNameDict.put(id, name);
+            while ((Line = bufReader.readLine()) != null) {
+                if (Line.contains("<tr>")) {
+                    String key = bufReader
+                        .readLine()
+                        .split(">")[1].split("<")[0];
+                    String value = bufReader
+                        .readLine()
+                        .split(">")[1].split("<")[0];
+                    idAndNameDict.put(key, value);
                 }
             }
+            idAndNameDict.remove("Property ID in AVL packet");
         } catch (Exception e) {
-            // Handle exception
-            e.printStackTrace();
+            // Todo AuSbAuFaEhIg
         }
+        System.out.println(idAndNameDict);
         return idAndNameDict.isEmpty() ? null : idAndNameDict;
     }
 
@@ -77,9 +195,6 @@ public class ScrapeTeltonikaIoWiki {
 
             Elements body = doc.select(cssQuiery);
             Elements rows = body.select("tr");
-
-            // Debugging
-            System.out.println(rows);
 
             return rows.toString();
         } catch (Exception e) {

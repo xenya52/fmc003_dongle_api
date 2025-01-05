@@ -1,7 +1,6 @@
 package com.xenya52.fmc003_rest_api.controller.v1;
 
 import com.xenya52.fmc003_rest_api.service.ScrapeTeltonikaIoWiki;
-import java.util.Dictionary;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,15 +21,20 @@ public class TeltonikaIoWikiController {
         return ioWiki.getDataSendingParameters();
     }
 
-    @GetMapping("/teltonika-io-translate-{id}")
-    public String getTeltonikaIoIdAndName(int propertyIDInAVLPacket) {
-        return ioWiki.idToName(propertyIDInAVLPacket);
+    @GetMapping("/teltonika-io-data-json")
+    public String getTeltonikaIoPageJson() {
+        return ioWiki.getDataSendingParametersJson();
     }
 
-    // Debugging
-    @GetMapping("/teltonika-io-debug")
-    public String debug() {
-        String data = ioWiki.idToName(80);
-        return data;
+    @GetMapping("/iowiki-id-to-name")
+    public String getTeltonikaIoIdAndName(int id) {
+        String name = ioWiki.idToName(id);
+        return name;
+    }
+
+    @GetMapping("/iowiki-name-to-id")
+    public String getTeltonikaIoNameAndId(String name) {
+        String id = ioWiki.nameToId(name);
+        return id;
     }
 }

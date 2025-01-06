@@ -1,5 +1,4 @@
 # FMC003 Rest API
----------------
 
 A REST API that is easy to understand. 
 Sidenote: I aim to demonstrate a clean and efficient structure for a typical REST API application
@@ -13,7 +12,7 @@ Table of Contents
 ---------------
 
 - [Getting Started](#Getting-Started)
-- [Project Structure](#Project-Strucutre)
+- [Project Structure](#Project-Structure)
 - [Endpoints](#Endpoints)
 - [Technologies Used](#Technologies-Used)
 - [Contributing](#Contributing)

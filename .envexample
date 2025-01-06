@@ -1,9 +1,7 @@
 // Exmaple of .env file
 
-MONGODB_DATABASE=teltonikaDongle
-COLLECTION_DONGLE_DATA=fmc003 // dongle type
-COLLECTION_DONGLE_SPEC=ioWiki // tektonika io wiki scraped data
+MONGODB_DATABASE=teltonikaDB
 MONGODB_PORT=27017
 MONGODB_HOST=localhost
-MONGODB_USERNAME=root
+MONGODB_USERNAME=youser
 MONGODB_PASSWORD=example

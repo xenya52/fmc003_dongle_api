@@ -13,22 +13,25 @@ public class IoDongleModel {
 
     // Attributes
     @Id
-    @PartitionKey
-    private String deviceId; // Device ID
+    private long deviceId; // Device ID
 
-    private String ts; // Timestamp
-    private String pr; // Pressure
-    private String latlng; // Latitude and Longitude
-    private String alt; // Altitude
-    private String ang; // Angle
-    private String sat; // Satellites
-    private String sp; // Speed
-    private String evt; // Event
-    private Map<String, String> ioWikiParamas; // Params from teltonika io wiki
+    @PartitionKey
+    private String sasPolicyName; // Device Name
+
+    private List<IoWikiModel> ioWikiModelList; // Params from teltonika io wiki
 
     // Methods
     public String toJson() {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(this);
+    }
+
+    public bool parseDongleJsonToIoWikiModelList(String json) {
+        try {
+            // Todo: implement
+        } catch (JsonProcessingException e) {
+            return false;
+        }
+        return true;
     }
 }

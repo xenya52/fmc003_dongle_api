@@ -6,24 +6,39 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
+@AllArgsConstructor
 @Document(collection = "ioWikiIdAndName")
 public class IoWikiModel {
 
     // Attributes
     @Id
-    private String id;
+    private String wikiId;
 
-    private String name;
+    @PartitionKey
+    private String wikiName;
+
+    private String wikiDescription;
+    private String wikiType;
+    private String multiplier;
+    private String valMin;
+    private String valMax;
+    private String unit;
 
     // Constructors
-    public IoWikiModel(String id, String name) {
-        this.id = id;
-        this.name = name;
+    public IoWikiModel() {
+        this.wikiId = "-";
+        this.wikiName = "-";
+        this.wikiDescription = "-";
+        this.wikiType = "-";
+        this.multiplier = "-";
+        this.valMin = "-";
+        this.valMax = "-";
+        this.unit = "-";
     }
 
     // Methods
     public String toJson() {
-        OpjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(this);
     }
 }

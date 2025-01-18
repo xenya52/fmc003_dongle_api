@@ -73,6 +73,45 @@ The project is divided into multiple layers to follow best practices and ensure 
 
 The model package contains the classes that represent the data of the application.
 
+The ```IoDongleModel``` class is a Java model representing a device. It includes the following:
+
+- **Attributes**:
+  - ```deviceId```: A long value representing the Device ID.
+  - ```sasPolicyName```: A String representing the Device Name.
+  - ```ioWikiModelList```: A list of IoWikiModel objects.
+
+- **Methods**:
+  - ```toJson()```: Converts the IoDongleModel object to a JSON string.
+  - ```parseDongleJsonToIoWikiModelList(String json)```: Parses a JSON string to populate the ioWikiModelList.
+
+
+The ```IoWikiModel``` class is a Java model representing a wiki entry. It includes the following:
+
+- **Attributes**:
+  - ```wikiId```: A string representing the Wiki ID.
+  - ```wikiName```: A string representing the Wiki Name.
+  - ```wikiDescription```: A string representing the Wiki Description.
+  - ```wikiType```: A string representing the Wiki Type.
+  - ```multiplier```: A string representing a multiplier value.
+  - ```valMin```: A string representing the minimum value.
+  - ```valMax```: A string representing the maximum value.
+  - ```unit```: A string representing the unit.
+
+- **Methods**:
+  - ```toJson()```: Converts the IoWikiModel object to a JSON string.
+
+- **Constructors**:
+  - Multiple constructors allow initializing the object with various combinations of attributes.
+
+For more details, you can view the [file](https://github.com/xenya52/fmc003_rest-api/blob/6ac4369bb630b6df1e0e1027347faac6b779bd8e/src/main/java/com/xenya52/fmc003_rest_api/model/IoWikiModel.java) here.
+
+**Key Differences**
+
+- ```IoDongleModel``` includes a list of IoWikiModel objects and methods to handle JSON serialization and deserialization.
+- ```IoWikiModel``` focuses on representing wiki entries with various attributes and provides multiple constructors for flexibility.
+
+
+
 ### Service
 
 The service package is responsible for implementing the business logic of the application. It acts as an intermediary between the controller and the repository layers.

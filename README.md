@@ -1,6 +1,5 @@
 # FMC003 Rest API
 
-<<<<<<< HEAD
 A REST API that is easy to understand.
 Sidenote: I aim to demonstrate a clean and efficient structure for a typical REST API application
 
@@ -33,7 +32,6 @@ Table of Contents
 - [Contributing](Contributing)
 - [License](License)
 - [Contact](Contact)
->>>>>>> 915518baa99701c43588e620cad60c42fc1dd9c3
 
 Getting Started
 ---------

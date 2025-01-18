@@ -1,37 +1,48 @@
 package main.java.com.xenya52.fmc003_rest_api.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xenya52.fmc003_rest_api.model.IoWikiModel;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.cassandra.core.mapping.PartitionKey;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Getters
+@Getter
 @AllArgsConstructor
-@Document(collection = "ioDongle")
 public class IoDongleModel {
 
     // Attributes
     @Id
     private long deviceId; // Device ID
 
-    @PartitionKey
     private String sasPolicyName; // Device Name
-
     private List<IoWikiModel> ioWikiModelList; // Params from teltonika io wiki
 
     // Methods
     public String toJson() {
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(this);
+        try {
+            return objectMapper.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public bool parseDongleJsonToIoWikiModelList(String json) {
+    public boolean parseDongleJsonToIoWikiModelList(String json) {
         try {
-            // Todo: implement
+            ObjectMapper objectMapper = new ObjectMapper();
+            this.ioWikiModelList = objectMapper.readValue(
+                json,
+                objectMapper
+                    .getTypeFactory()
+                    .constructCollectionType(List.class, IoWikiModel.class)
+            );
+            return true;
         } catch (JsonProcessingException e) {
+            e.printStackTrace();
             return false;
         }
-        return true;
     }
 }

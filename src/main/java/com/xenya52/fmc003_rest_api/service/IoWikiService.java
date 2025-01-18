@@ -1,7 +1,7 @@
 package com.xenya52.fmc003_rest_api.service;
 
 import com.xenya52.fmc003_rest_api.model.IoWikiModel;
-import com.xenya52.fmc003_rest_api.repository.TeltonikaRepository;
+import com.xenya52.fmc003_rest_api.repository.IoWikiRepository;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -18,7 +18,7 @@ public class IoWikiService {
 
     // Attributes
     @Autowired
-    private TeltonikaRepository teltonikaRepository;
+    private IoWikiRepository ioWikiRepository;
 
     // Constructors
     public IoWikiService() {}
@@ -26,27 +26,27 @@ public class IoWikiService {
     // Methods
     public IoWikiModel getIoWikiById(String id) {
         log.info("Fetching IoWikiModel with id: " + id);
-        return teltonikaRepository.findById(id).orElse(null);
+        return ioWikiRepository.findByWikiId(id).orElse(null);
     }
 
     public IoWikiModel getIoWikiByName(String name) {
         log.info("Fetching IoWikiModel with name: " + name);
-        return teltonikaRepository.findByName(name).orElse(null);
+        return ioWikiRepository.findByWikiName(name).orElse(null);
     }
 
     public Map<String, String> getIoWikiMap() {
         log.info("Fetching all IoWikiModels");
         Map<String, String> ioWikiMap = new HashMap<>();
-        List<IoWikiModel> ioWikiModels = teltonikaRepository.findAll();
+        List<IoWikiModel> ioWikiModels = ioWikiRepository.findAll();
         for (IoWikiModel ioWikiModel : ioWikiModels) {
-            ioWikiMap.put(ioWikiModel.getId(), ioWikiModel.getName());
+            ioWikiMap.put(ioWikiModel.getWikiId(), ioWikiModel.getWikiName());
         }
         return ioWikiMap;
     }
 
     public boolean saveIoWiki(IoWikiModel ioWikiModel) {
         try {
-            teltonikaRepository.save(ioWikiModel);
+            ioWikiRepository.save(ioWikiModel);
         } catch (
             IllegalArgumentException | OptimisticLockingFailureException e
         ) {

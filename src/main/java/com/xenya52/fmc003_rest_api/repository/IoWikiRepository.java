@@ -5,9 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface TeltonikaRepository
-    extends MongoRepository<IoWikiModel, String> {
-    Optional<IoWikiModel> findById(String id);
-    Optional<IoWikiModel> findByName(String name);
+public interface IoWikiRepository extends MongoRepository<IoWikiModel, String> {
+    Optional<IoWikiModel> findByWikiId(String id);
+    Optional<IoWikiModel> findByWikiName(String name);
     List<IoWikiModel> findAll();
 }

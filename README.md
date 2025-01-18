@@ -1,16 +1,14 @@
 # FMC003 Rest API
 
-A REST API that is easy to understand. 
+A REST API that is easy to understand.
 Sidenote: I aim to demonstrate a clean and efficient structure for a typical REST API application
 
 Overview
 ---------------
-
 This repository provides a restapi to get the data from the db of your choice and make it available as easy-to-understand restful apis.
 
 Table of Contents
 ---------------
-
 - [Getting Started](#Getting-Started)
 - [Project Structure](#Project-Structure)
 - [Endpoints](#Endpoints)

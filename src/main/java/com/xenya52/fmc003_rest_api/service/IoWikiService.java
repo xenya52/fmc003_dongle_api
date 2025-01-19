@@ -1,6 +1,6 @@
 package com.xenya52.fmc003_rest_api.service;
 
-import com.xenya52.fmc003_rest_api.model.IoWikiModel;
+import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
 import com.xenya52.fmc003_rest_api.repository.IoWikiRepository;
 import java.util.Dictionary;
 import java.util.Enumeration;
@@ -25,17 +25,14 @@ public class IoWikiService {
 
     // Methods
     public IoWikiModel getIoWikiById(String id) {
-        log.info("Fetching IoWikiModel with id: " + id);
         return ioWikiRepository.findByWikiId(id).orElse(null);
     }
 
     public IoWikiModel getIoWikiByName(String name) {
-        log.info("Fetching IoWikiModel with name: " + name);
         return ioWikiRepository.findByWikiName(name).orElse(null);
     }
 
     public Map<String, String> getIoWikiMap() {
-        log.info("Fetching all IoWikiModels");
         Map<String, String> ioWikiMap = new HashMap<>();
         List<IoWikiModel> ioWikiModels = ioWikiRepository.findAll();
         for (IoWikiModel ioWikiModel : ioWikiModels) {

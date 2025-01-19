@@ -1,11 +1,12 @@
-package com.xenya52.fmc003_rest_api.model;
+package com.xenya52.fmc003_rest_api.entity.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 
 @Getter
+@NoArgsConstructor
 public class IoWikiModel {
 
     // Attributes
@@ -31,17 +32,16 @@ public class IoWikiModel {
         String valMax,
         String unit
     ) {
-        this.wikiId = wikiId != null ? wikiId : "-";
-        this.wikiName = wikiName != null ? wikiName : "-";
-        this.wikiDescription = wikiDescription != null ? wikiDescription : "-";
-        this.wikiType = wikiType != null ? wikiType : "-";
-        this.multiplier = multiplier != null ? multiplier : "-";
-        this.valMin = valMin != null ? valMin : "-";
-        this.valMax = valMax != null ? valMax : "-";
-        this.unit = unit != null ? unit : "-";
+        this.wikiId = wikiId;
+        this.wikiName = wikiName;
+        this.wikiDescription = wikiDescription;
+        this.wikiType = wikiType;
+        this.multiplier = multiplier;
+        this.valMin = valMin;
+        this.valMax = valMax;
+        this.unit = unit;
     }
 
-    // Constructor
     public IoWikiModel(String wikiId, String wikiName) {
         this(wikiId, wikiName, "-", "-", "-", "-", "-", "-");
     }

@@ -39,7 +39,7 @@ public class IoWikiController {
     }
 
     @GetMapping("/v1//wiki/all")
-    public ResponseEntity<Map<String, String>> getTeltonikaIoPage() {
+    public ResponseEntity<List<IoWikiModel>> getTeltonikaIoPage() {
         return new ResponseEntity<>(
             ioWikiService.getIoWikiMap(),
             // Todo linker with all simular methods

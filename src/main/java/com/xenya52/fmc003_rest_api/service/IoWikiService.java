@@ -6,7 +6,6 @@ import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
@@ -32,13 +31,14 @@ public class IoWikiService {
         return ioWikiRepository.findByWikiName(name).orElse(null);
     }
 
-    public Map<String, String> getIoWikiMap() {
-        Map<String, String> ioWikiMap = new HashMap<>();
-        List<IoWikiModel> ioWikiModels = ioWikiRepository.findAll();
-        for (IoWikiModel ioWikiModel : ioWikiModels) {
-            ioWikiMap.put(ioWikiModel.getWikiId(), ioWikiModel.getWikiName());
+    public List<IoWikiModel> getIoWikiMap() {
+        try {
+            return ioWikiRepository.findAll();
+        } catch (Exception e) {
+            // Todo
+            log.error("Error retrieving IoWiki map", e);
+            return null;
         }
-        return ioWikiMap;
     }
 
     public boolean saveIoWiki(IoWikiModel ioWikiModel) {
@@ -54,12 +54,8 @@ public class IoWikiService {
         return true;
     }
 
-    public boolean saveIoWikiMap(Map<String, String> ioWikiDict) {
-        for (Map.Entry<String, String> entry : ioWikiDict.entrySet()) {
-            IoWikiModel ioWikiModel = new IoWikiModel(
-                entry.getKey(),
-                entry.getValue()
-            );
+    public boolean saveIoWikiList(List<IoWikiModel> ioWikiList) {
+        for (IoWikiModel ioWikiModel : ioWikiList) {
             if (!saveIoWiki(ioWikiModel)) {
                 return false;
             }

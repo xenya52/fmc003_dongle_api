@@ -1,8 +1,9 @@
 package com.xenya52.fmc003_rest_api.service;
 
+import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import org.springframework.stereotype.Component;
@@ -12,7 +13,7 @@ public class IoWikiByFile {
 
     // Attributes
 
-    private Map<String, String> idsAndNames;
+    private List<IoWikiModel> idsAndNames;
 
     // Constructors
     public IoWikiByFile() {
@@ -20,7 +21,7 @@ public class IoWikiByFile {
     }
 
     // Methods
-    public Map<String, String> getIdsAndNames() {
+    public List<IoWikiModel> getIdsAndNames() {
         return idsAndNames;
     }
 
@@ -57,8 +58,8 @@ public class IoWikiByFile {
      * from the dataSendingParameters.txt file
      * @return a dictionary containing the IDs and names
      */
-    private Map<String, String> fetchIdsAndNames() {
-        Map<String, String> content = new Hashtable<>();
+    private List<IoWikiModel> fetchIdsAndNames() {
+        List<IoWikiModel> content;
         String filePath = "src/main/resources/teltonikaIdAndName.txt";
         try {
             File myObj = new File(filePath);
@@ -71,10 +72,10 @@ public class IoWikiByFile {
                     String[] items = part.split("=");
 
                     if (items.length == 2) {
-                        content.put(
-                            items[0].replace("{", "").replace(" ", ""),
-                            items[1].replace("}", "")
-                        );
+                        IoWikiModel model = new IoWikiModel();
+                        model.setId(items[0].replace("{", "").replace(" ", ""));
+                        model.setName(items[1].replace("}", ""));
+                        content.add(model);
                     }
                 }
             }

@@ -2,7 +2,7 @@ package com.xenya52.fmc003_rest_api.entity.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
+import com.google.common.base.Optional;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

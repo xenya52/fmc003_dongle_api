@@ -3,6 +3,7 @@ package com.xenya52.fmc003_rest_api.service;
 import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -32,7 +33,7 @@ public class IoWikiByFile {
      * @return a string containing the name of the property id
      */
     public String idToName(int id) {
-        String name = idsAndNames.get(String.valueOf(id));
+        String name = idsAndNames.get(id).getWikiName();
         return name == null ? "Property not found" : name;
     }
 
@@ -43,10 +44,9 @@ public class IoWikiByFile {
      * @return a string containing the ID of the property
      */
     public String nameToId(String name) {
-        Map<String, String> idAndName = idsAndNames;
-        for (Map.Entry<String, String> entry : idAndName.entrySet()) {
-            if (entry.getValue().equals(name)) {
-                return entry.getKey();
+        for (IoWikiModel ioWikiModel : idsAndNames) {
+            if (ioWikiModel.getWikiName().equals(name)) {
+                return String.valueOf(ioWikiModel.toJson());
             }
         }
         return "Property not found";
@@ -59,7 +59,7 @@ public class IoWikiByFile {
      * @return a dictionary containing the IDs and names
      */
     private List<IoWikiModel> fetchIdsAndNames() {
-        List<IoWikiModel> content;
+        List<IoWikiModel> content = new ArrayList<>();
         String filePath = "src/main/resources/teltonikaIdAndName.txt";
         try {
             File myObj = new File(filePath);
@@ -72,9 +72,10 @@ public class IoWikiByFile {
                     String[] items = part.split("=");
 
                     if (items.length == 2) {
-                        IoWikiModel model = new IoWikiModel();
-                        model.setId(items[0].replace("{", "").replace(" ", ""));
-                        model.setName(items[1].replace("}", ""));
+                        IoWikiModel model = new IoWikiModel(
+                            items[0].replace("{", "").replace(" ", ""),
+                            items[1].replace("}", "")
+                        );
                         content.add(model);
                     }
                 }

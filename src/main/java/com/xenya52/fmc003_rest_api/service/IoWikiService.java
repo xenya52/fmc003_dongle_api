@@ -1,11 +1,12 @@
 package com.xenya52.fmc003_rest_api.service;
 
+import com.xenya52.fmc003_rest_api.entity.dto.GetResponseDto;
 import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
 import com.xenya52.fmc003_rest_api.repository.IoWikiRepository;
-import java.util.Dictionary;
-import java.util.Enumeration;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
@@ -23,25 +24,38 @@ public class IoWikiService {
     public IoWikiService() {}
 
     // Methods
-    public IoWikiModel getIoWikiById(String id) {
-        return ioWikiRepository.findByWikiId(id).orElse(null);
+    public GetResponseDto getIoWikiById(String id) {
+        IoWikiModel wikiModel = ioWikiRepository.findByWikiId(id).orElse(null);
+        return wikiModel == null ? null : new GetResponseDto(wikiModel);
     }
 
-    public IoWikiModel getIoWikiByName(String name) {
-        return ioWikiRepository.findByWikiName(name).orElse(null);
+    public GetResponseDto getIoWikiByName(String name) {
+        IoWikiModel wikiModel = ioWikiRepository
+            .findByWikiName(name)
+            .orElse(null);
+        return wikiModel == null ? null : new GetResponseDto(wikiModel);
     }
 
-    public List<IoWikiModel> getIoWikiMap() {
-        try {
-            return ioWikiRepository.findAll();
-        } catch (Exception e) {
-            // Todo
-            log.error("Error retrieving IoWiki map", e);
-            return null;
+    public List<GetResponseDto> getIoWikiList() {
+        List<IoWikiModel> ioWikiModelList = ioWikiRepository.findAll();
+        List<GetResponseDto> ioWikiDtoList = new ArrayList<>();
+
+        for (IoWikiModel ioWikiModel : ioWikiModelList) {
+            ioWikiDtoList.add(new GetResponseDto(ioWikiModel));
         }
+        return ioWikiDtoList;
     }
 
-    public boolean saveIoWiki(IoWikiModel ioWikiModel) {
+    public boolean saveIoWikiList(List<IoWikiModel> ioWikiList) {
+        for (IoWikiModel ioWikiModel : ioWikiList) {
+            if (!saveIoWiki(ioWikiModel)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean saveIoWiki(IoWikiModel ioWikiModel) {
         try {
             ioWikiRepository.save(ioWikiModel);
         } catch (
@@ -50,15 +64,6 @@ public class IoWikiService {
             // Todo make it more specific
             // https://medium.com/@aedemirsen/spring-boot-global-exception-handler-842d7143cf2a
             return false;
-        }
-        return true;
-    }
-
-    public boolean saveIoWikiList(List<IoWikiModel> ioWikiList) {
-        for (IoWikiModel ioWikiModel : ioWikiList) {
-            if (!saveIoWiki(ioWikiModel)) {
-                return false;
-            }
         }
         return true;
     }

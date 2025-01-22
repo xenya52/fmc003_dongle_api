@@ -1,6 +1,7 @@
 package com.xenya52.fmc003_rest_api.entity.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -120,6 +121,10 @@ public class IoWikiModel {
     }
 
     // Methods
+    public String getWikiName() {
+        return wikiName;
+    }
+
     public String toJson() {
         ObjectMapper objectMapper = new ObjectMapper();
         try {

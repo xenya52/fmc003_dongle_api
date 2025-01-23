@@ -1,4 +1,4 @@
-package main.java.com.xenya52.fmc003_rest_api.config;
+package com.xenya52.fmc003_rest_api.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;

@@ -6,6 +6,7 @@ import com.xenya52.fmc003_rest_api.repository.IoWikiRepository;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +27,26 @@ public class IoWikiService {
     // Methods
     public GetResponseDto getIoWikiById(String id) {
         IoWikiModel wikiModel = ioWikiRepository.findByWikiId(id).orElse(null);
-        return wikiModel == null ? null : new GetResponseDto(wikiModel);
+        Map<String, String> links = Map.of(
+            "prev",
+            getPrevId(id),
+            "next",
+            getNextId(id)
+        );
+        return wikiModel == null ? null : new GetResponseDto(wikiModel, links);
     }
 
     public GetResponseDto getIoWikiByName(String name) {
         IoWikiModel wikiModel = ioWikiRepository
             .findByWikiName(name)
             .orElse(null);
-        return wikiModel == null ? null : new GetResponseDto(wikiModel);
+        Map<String, String> links = Map.of(
+            "prev",
+            getPrevId(wikiModel.getWikiId()),
+            "next",
+            getNextId(wikiModel.getWikiId())
+        );
+        return wikiModel == null ? null : new GetResponseDto(wikiModel, links);
     }
 
     public List<GetResponseDto> getIoWikiList() {
@@ -41,7 +54,13 @@ public class IoWikiService {
         List<GetResponseDto> ioWikiDtoList = new ArrayList<>();
 
         for (IoWikiModel ioWikiModel : ioWikiModelList) {
-            ioWikiDtoList.add(new GetResponseDto(ioWikiModel));
+            Map<String, String> links = Map.of(
+                "prev",
+                getNextId(ioWikiModel.getWikiId()),
+                "next",
+                getNextId(ioWikiModel.getWikiId())
+            );
+            ioWikiDtoList.add(new GetResponseDto(ioWikiModel, links));
         }
         return ioWikiDtoList;
     }
@@ -66,5 +85,29 @@ public class IoWikiService {
             return false;
         }
         return true;
+    }
+
+    private String getPrevId(String id) {
+        List<IoWikiModel> ioWikiModelList = ioWikiRepository.findAll();
+        int listSize = ioWikiModelList.size();
+        int index = Integer.parseInt(id);
+
+        if (index < listSize && index < 0) {
+            return ioWikiModelList.get(index - 1).getWikiId();
+        } else {
+            return "";
+        }
+    }
+
+    private String getNextId(String id) {
+        List<IoWikiModel> ioWikiModelList = ioWikiRepository.findAll();
+        int listSize = ioWikiModelList.size();
+        int index = Integer.parseInt(id);
+
+        if (index < listSize - 1 && index > -1) {
+            return ioWikiModelList.get(index + 1).getWikiId();
+        } else {
+            return "";
+        }
     }
 }

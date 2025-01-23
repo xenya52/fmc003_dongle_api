@@ -1,7 +1,6 @@
 package com.xenya52.fmc003_rest_api.controller.v1;
 
 import com.xenya52.fmc003_rest_api.entity.dto.GetResponseDto;
-import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
 import com.xenya52.fmc003_rest_api.service.IoWikiByFile;
 import com.xenya52.fmc003_rest_api.service.IoWikiService;
 import java.util.List;

@@ -25,21 +25,24 @@ public class GetResponseDto {
     private String message;
     private IoWikiModel data;
 
-    // Todo add last Model
     // Todo add prev Model
-    private List<Map<String, String>> links;
+    private Map<String, String> links;
 
     //Constructor
-    public GetResponseDto(IoWikiModel data_) {
-        initResponseDto(data_);
+    public GetResponseDto(IoWikiModel data_, Map<String, String> links_) {
+        initResponseDto(data_, links_);
     }
 
     // Methods
-    private boolean initResponseDto(IoWikiModel data_) {
+    private boolean initResponseDto(
+        IoWikiModel data_,
+        Map<String, String> links_
+    ) {
         this.timestamp = new Date();
         this.status = "200";
         this.message = "OK";
         this.data = data_;
+        this.links = links_;
         return true;
     }
 }

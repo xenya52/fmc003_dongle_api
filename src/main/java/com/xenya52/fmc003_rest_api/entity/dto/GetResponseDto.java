@@ -24,8 +24,6 @@ public class GetResponseDto {
     private String status;
     private String message;
     private IoWikiModel data;
-
-    // Todo add prev Model
     private Map<String, String> links;
 
     //Constructor

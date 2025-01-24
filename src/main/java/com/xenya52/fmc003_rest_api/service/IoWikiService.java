@@ -4,6 +4,7 @@ import com.xenya52.fmc003_rest_api.entity.dto.GetResponseDto;
 import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
 import com.xenya52.fmc003_rest_api.repository.IoWikiRepository;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +75,7 @@ public class IoWikiService {
         return true;
     }
 
+    // Todo sort the list by id
     private boolean saveIoWiki(IoWikiModel ioWikiModel) {
         try {
             ioWikiRepository.save(ioWikiModel);
@@ -87,12 +89,13 @@ public class IoWikiService {
         return true;
     }
 
+    // Todo sort the list by id
     private String getPrevId(String id) {
         List<IoWikiModel> ioWikiModelList = ioWikiRepository.findAll();
         int listSize = ioWikiModelList.size();
         int index = Integer.parseInt(id);
 
-        if (index < listSize && index < 0) {
+        if (index < listSize && index > 0) {
             return ioWikiModelList.get(index - 1).getWikiId();
         } else {
             return "";

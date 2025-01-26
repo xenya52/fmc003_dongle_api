@@ -89,13 +89,20 @@ public class IoWikiService {
         return true;
     }
 
-    // Todo sort the list by id
     private String getPrevId(String id) {
         List<IoWikiModel> ioWikiModelList = ioWikiRepository.findAll();
-        int listSize = ioWikiModelList.size();
-        int index = Integer.parseInt(id);
+        ioWikiModelList.sort(Comparator.comparing(IoWikiModel::getWikiId));
+        int index = -1;
 
-        if (index < listSize && index > 0) {
+        // Debugging
+        for (int i = 0; i < ioWikiModelList.size(); i++) {
+            if (ioWikiModelList.get(i).getWikiId().equals(id)) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index > 0) {
             return ioWikiModelList.get(index - 1).getWikiId();
         } else {
             return "";
@@ -104,10 +111,22 @@ public class IoWikiService {
 
     private String getNextId(String id) {
         List<IoWikiModel> ioWikiModelList = ioWikiRepository.findAll();
-        int listSize = ioWikiModelList.size();
-        int index = Integer.parseInt(id);
+        ioWikiModelList.sort(Comparator.comparing(IoWikiModel::getWikiId));
 
-        if (index < listSize - 1 && index > -1) {
+        // Debugging
+        for (IoWikiModel ioWikiModel : ioWikiModelList) {
+            System.out.println("Wiki ID: " + ioWikiModel.getWikiId());
+        }
+
+        int index = -1;
+        for (int i = 0; i < ioWikiModelList.size(); i++) {
+            if (ioWikiModelList.get(i).getWikiId().equals(id)) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index >= 0 && index < ioWikiModelList.size() - 1) {
             return ioWikiModelList.get(index + 1).getWikiId();
         } else {
             return "";

@@ -121,6 +121,19 @@ public class IoWikiModel {
     }
 
     // Methods
+
+    public int getWikiIdAsInt() {
+        try {
+            return Integer.parseInt(wikiId);
+        } catch (NumberFormatException e) {
+            int result = 0;
+            for (char c : wikiId.toCharArray()) {
+                result = result * 31 + (int) c;
+            }
+            return result;
+        }
+    }
+
     public String getWikiName() {
         return wikiName;
     }

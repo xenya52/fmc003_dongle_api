@@ -3,6 +3,7 @@ package com.xenya52.fmc003_rest_api.controller.v1;
 import com.xenya52.fmc003_rest_api.entity.dto.GetResponseDto;
 import com.xenya52.fmc003_rest_api.service.IoWikiByFile;
 import com.xenya52.fmc003_rest_api.service.IoWikiService;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +27,9 @@ public class IoWikiController {
     private IoWikiService ioWikiService;
 
     // Methods
-    // Todo make a own mongoService for this without restapi
+    // Todo make a own mongoService for this without that restapi
     /**
-    @GetMapping("/debug-fetch-file-specific-file")
+    @GetMapping("/fetch-file")
     public ResponseEntity<String> debug() {
         List<IoWikiModel> idsAndNames = ioWiki.getIdsAndNames();
         if (idsAndNames == null) {
@@ -42,7 +43,7 @@ public class IoWikiController {
         return new ResponseEntity<>("Debug", HttpStatus.OK);
     }
     */
-    @GetMapping("/all")
+    @GetMapping("/items/all")
     public ResponseEntity<List<GetResponseDto>> ioWikiAll() {
         List<GetResponseDto> response = ioWikiService.getIoWikiList();
         if (response == null) {
@@ -51,12 +52,20 @@ public class IoWikiController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<GetResponseDto> ioWikiById(@PathVariable String id) {
-        GetResponseDto response = ioWikiService.getIoWikiById(id);
-        if (response == null) {
+    @GetMapping("/items/{listOfIds}")
+    public ResponseEntity<List<GetResponseDto>> ioWikiList(
+        @PathVariable List<String> listOfIds
+    ) {
+        List<GetResponseDto> responseList = new ArrayList<>();
+
+        for (String id : listOfIds) {
+            GetResponseDto response = ioWikiService.getIoWikiById(id);
+            responseList.add(response);
+        }
+
+        if (responseList == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
 }

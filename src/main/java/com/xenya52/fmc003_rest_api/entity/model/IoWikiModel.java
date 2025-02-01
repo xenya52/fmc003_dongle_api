@@ -1,14 +1,16 @@
 package com.xenya52.fmc003_rest_api.entity.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xenya52.fmc003_rest_api.entity.model.IIo;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
 @NoArgsConstructor
-public class IoWikiModel {
+public class IoWikiModel implements IIo {
 
     // Attributes
     @Id

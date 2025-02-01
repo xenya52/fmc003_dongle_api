@@ -1,9 +1,8 @@
 package com.xenya52.fmc003_rest_api.entity.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
+import com.xenya52.fmc003_rest_api.entity.model.IIo;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,21 +20,18 @@ public class GetResponseDto {
     )
     private Date timestamp;
 
+    private IIo data;
     private String status;
     private String message;
-    private IoWikiModel data;
     private Map<String, String> links;
 
     //Constructor
-    public GetResponseDto(IoWikiModel data_, Map<String, String> links_) {
+    public GetResponseDto(IIo data_, Map<String, String> links_) {
         initResponseDto(data_, links_);
     }
 
     // Methods
-    private boolean initResponseDto(
-        IoWikiModel data_,
-        Map<String, String> links_
-    ) {
+    private boolean initResponseDto(IIo data_, Map<String, String> links_) {
         this.timestamp = new Date();
         this.status = "200";
         this.message = "OK";

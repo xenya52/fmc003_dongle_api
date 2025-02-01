@@ -3,6 +3,7 @@ package com.xenya52.fmc003_rest_api.entity.model;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
+import com.xenya52.fmc003_rest_api.entity.model.IIo;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,11 +11,11 @@ import org.springframework.data.annotation.Id;
 
 @Getter
 @AllArgsConstructor
-public class IoDongleModel {
+public class IoDongleModel implements IIo {
 
     // Attributes
     @Id
-    private long deviceId; // Device ID
+    private String deviceId; // Device ID
 
     private String sasPolicyName; // Device Name
     private List<IoWikiModel> ioWikiModelList; // Params from teltonika io wiki

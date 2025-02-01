@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface IoDongleRepository
     extends MongoRepository<IoDongleModel, String> {
-    Optional<IoDongleModel> findByDongleId(String id);
-    Optional<IoDongleModel> findByDongleName(String name);
+    Optional<IoDongleModel> findByDeviceId(String id);
+    Optional<IoDongleModel> findBySasPolicyName(String name);
     List<IoDongleModel> findAll();
 }

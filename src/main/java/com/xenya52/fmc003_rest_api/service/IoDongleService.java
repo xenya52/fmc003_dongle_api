@@ -20,14 +20,12 @@ public class IoDongleService {
     private IoDongleRepository ioDongleRepository;
 
     // Constructors
-    public IoDongleService() {
-        this.ioDongleRepository = new IoDongleRepository();
-    }
+    public IoDongleService() {}
 
     // Methods
     public GetResponseDto getIoDongleById(String id) {
         IoDongleModel dongleModel = ioDongleRepository
-            .findByDongleId(id)
+            .findByDeviceId(id)
             .orElse(null);
         Map<String, String> links = Map.of(
             "prev",
@@ -42,13 +40,13 @@ public class IoDongleService {
 
     public GetResponseDto getIoDongleByName(String name) {
         IoDongleModel dongleModel = ioDongleRepository
-            .findByDongleName(name)
+            .findBySasPolicyName(name)
             .orElse(null);
         Map<String, String> links = Map.of(
             "prev",
-            getPrevId(dongleModel.getDongleId()),
+            getPrevId(dongleModel.getDeviceId()),
             "next",
-            getNextId(dongleModel.getDongleId())
+            getNextId(dongleModel.getDeviceId())
         );
         return dongleModel == null
             ? null
@@ -62,9 +60,9 @@ public class IoDongleService {
         for (IoDongleModel ioDongleModel : ioDongleModelList) {
             Map<String, String> links = Map.of(
                 "prev",
-                getNextId(ioDongleModel.getDongleId()),
+                getNextId(ioDongleModel.getDeviceId()),
                 "next",
-                getNextId(ioDongleModel.getDongleId())
+                getNextId(ioDongleModel.getDeviceId())
             );
             ioDongleDtoList.add(new GetResponseDto(ioDongleModel, links));
         }
@@ -74,11 +72,11 @@ public class IoDongleService {
     private String getPrevId(String id) {
         List<IoDongleModel> ioDongleModelList = ioDongleRepository.findAll();
         ioDongleModelList.sort(
-            Comparator.comparing(IoDongleModel::getDongleId)
+            Comparator.comparing(IoDongleModel::getDeviceId)
         );
         int index = 0;
         for (int i = 0; i < ioDongleModelList.size(); i++) {
-            if (ioDongleModelList.get(i).getDongleId().equals(id)) {
+            if (ioDongleModelList.get(i).getDeviceId().equals(id)) {
                 index = i;
                 break;
             }
@@ -86,28 +84,28 @@ public class IoDongleService {
         if (index == 0) {
             return ioDongleModelList
                 .get(ioDongleModelList.size() - 1)
-                .getDongleId();
+                .getDeviceId();
         } else {
-            return ioDongleModelList.get(index - 1).getDongleId();
+            return ioDongleModelList.get(index - 1).getDeviceId();
         }
     }
 
     private String getNextId(String id) {
         List<IoDongleModel> ioDongleModelList = ioDongleRepository.findAll();
         ioDongleModelList.sort(
-            Comparator.comparing(IoDongleModel::getDongleId)
+            Comparator.comparing(IoDongleModel::getDeviceId)
         );
         int index = 0;
         for (int i = 0; i < ioDongleModelList.size(); i++) {
-            if (ioDongleModelList.get(i).getDongleId().equals(id)) {
+            if (ioDongleModelList.get(i).getDeviceId().equals(id)) {
                 index = i;
                 break;
             }
         }
         if (index == ioDongleModelList.size() - 1) {
-            return ioDongleModelList.get(0).getDongleId();
+            return ioDongleModelList.get(0).getDeviceId();
         } else {
-            return ioDongleModelList.get(index + 1).getDongleId();
+            return ioDongleModelList.get(index + 1).getDeviceId();
         }
     }
 }

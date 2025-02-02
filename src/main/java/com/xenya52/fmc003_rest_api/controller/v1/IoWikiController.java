@@ -21,9 +21,6 @@ public class IoWikiController {
 
     // Attributes
     @Autowired
-    private IoWikiByFile ioWiki;
-
-    @Autowired
     private IoWikiService ioWikiService;
 
     // Methods

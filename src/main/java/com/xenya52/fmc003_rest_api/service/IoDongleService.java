@@ -53,6 +53,14 @@ public class IoDongleService {
             : new GetResponseDto(dongleModel, links);
     }
 
+    public void saveIoDongle(IoDongleModel ioDongleModel) {
+        try {
+            ioDongleRepository.save(ioDongleModel);
+        } catch (Exception e) {
+            log.error("Error saving IoDongleModel: {}", e.getMessage());
+        }
+    }
+
     public List<GetResponseDto> getIoDongleList() {
         List<IoDongleModel> ioDongleModelList = ioDongleRepository.findAll();
         List<GetResponseDto> ioDongleDtoList = new ArrayList<>();

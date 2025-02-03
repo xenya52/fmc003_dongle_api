@@ -1,6 +1,8 @@
 package com.xenya52.fmc003_rest_api.controller.v1;
 
 import com.xenya52.fmc003_rest_api.entity.dto.GetResponseDto;
+import com.xenya52.fmc003_rest_api.entity.model.IoDongleModel;
+import com.xenya52.fmc003_rest_api.service.IoDongleByFile;
 import com.xenya52.fmc003_rest_api.service.IoDongleService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,29 @@ public class DongleController {
     private IoDongleService dongleService;
 
     // Methods
+
+    @GetMapping("/items/{id}")
+    public ResponseEntity<GetResponseDto> dongleById(String id) {
+        GetResponseDto response = dongleService.getIoDongleById(id);
+        if (response == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/fetch-file")
+    public ResponseEntity<String> fetchFile() {
+        try {
+            IoDongleByFile dongleByFile = new IoDongleByFile();
+            for (IoDongleModel dongleModel : dongleByFile.getDongelModel()) {
+                dongleService.saveIoDongle(dongleModel);
+            }
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/items/all")
     public ResponseEntity<List<GetResponseDto>> dongleAll() {
         List<GetResponseDto> response = dongleService.getIoDongleList();

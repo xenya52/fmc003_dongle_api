@@ -10,15 +10,19 @@ import lombok.Getter;
 import org.springframework.data.annotation.Id;
 
 @Getter
-@AllArgsConstructor
 public class IoDongleModel implements IIo {
 
     // Attributes
     @Id
     private String deviceId; // Device ID
 
-    private String sasPolicyName; // Device Name
     private List<IoWikiModel> ioWikiModelList; // Params from teltonika io wiki
+
+    // Constructors
+    public IoDongleModel(List<IoWikiModel> ioWikiModelList) {
+        this.deviceId = debugCreateRandomID();
+        this.ioWikiModelList = ioWikiModelList;
+    }
 
     // Methods
     public String toJson() {
@@ -45,5 +49,11 @@ public class IoDongleModel implements IIo {
             e.printStackTrace();
             return false;
         }
+    }
+
+    private String debugCreateRandomID() {
+        // Get random number
+        int random = (int) (Math.random() * 1000000);
+        return String.valueOf(random);
     }
 }

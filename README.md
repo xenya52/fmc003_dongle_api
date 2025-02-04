@@ -61,7 +61,6 @@ The ```IoDongleModel``` class is a Java model representing a device. It includes
 
 - **Attributes**:
   - ```deviceId```: A long value representing the Device ID.
-  - ```sasPolicyName```: A String representing the Device Name.
   - ```ioWikiModelList```: A list of IoWikiModel objects.
 
 - **Methods**:

@@ -35,7 +35,17 @@ public class DongleController {
     public ResponseEntity<String> fetchFile() {
         try {
             IoDongleByFile dongleByFile = new IoDongleByFile();
-            for (IoDongleModel dongleModel : dongleByFile.getDongelModel()) {
+
+            // Debug
+            System.out.println("DEBUG");
+            System.out.println(dongleByFile.getDongleList());
+            System.out.println("DEBUG");
+
+            for (IoDongleModel dongleModel : dongleByFile.getDongleList()) {
+                // Debug
+                System.out.println("DEBUG");
+                System.out.println(dongleModel.toJson());
+
                 dongleService.saveIoDongle(dongleModel);
             }
             return new ResponseEntity<>(HttpStatus.OK);

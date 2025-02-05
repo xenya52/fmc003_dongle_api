@@ -8,6 +8,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,26 +40,11 @@ public class IoDongleService {
             : new GetResponseDto(dongleModel, links);
     }
 
-    public GetResponseDto getIoDongleByName(String name) {
-        IoDongleModel dongleModel = ioDongleRepository
-            .findBySasPolicyName(name)
-            .orElse(null);
-        Map<String, String> links = Map.of(
-            "prev",
-            getPrevId(dongleModel.getDeviceId()),
-            "next",
-            getNextId(dongleModel.getDeviceId())
-        );
-        return dongleModel == null
-            ? null
-            : new GetResponseDto(dongleModel, links);
-    }
-
     public void saveIoDongle(IoDongleModel ioDongleModel) {
         try {
             ioDongleRepository.save(ioDongleModel);
         } catch (Exception e) {
-            log.error("Error saving IoDongleModel: {}", e.getMessage());
+            // TODO fix this
         }
     }
 

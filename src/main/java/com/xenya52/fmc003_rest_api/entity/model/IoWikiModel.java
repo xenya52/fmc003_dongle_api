@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Getter
 @NoArgsConstructor
 public class IoWikiModel implements IIo {
 
@@ -43,6 +42,11 @@ public class IoWikiModel implements IIo {
         this.valMin = valMin;
         this.valMax = valMax;
         this.unit = unit;
+    }
+
+    //Debug todo remove this soon
+    public IoWikiModel() {
+        this("debug", "-", "-", "-", "-", "-", "-", "-");
     }
 
     public IoWikiModel(String wikiId, String wikiName) {
@@ -123,6 +127,10 @@ public class IoWikiModel implements IIo {
     }
 
     // Methods
+
+    public String getWikiId() {
+        return wikiId;
+    }
 
     public int getWikiIdAsInt() {
         try {

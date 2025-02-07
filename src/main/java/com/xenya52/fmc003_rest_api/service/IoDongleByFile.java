@@ -1,5 +1,7 @@
 package com.xenya52.fmc003_rest_api.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xenya52.fmc003_rest_api.entity.model.IoDongleModel;
 import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
@@ -11,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -38,11 +41,12 @@ public class IoDongleByFile {
         try {
             File file = new File(filePath);
             Scanner scanner = new Scanner(file);
-            String jsonString = scanner.nextLine();
+            StringBuilder jsonStringBuilder = new StringBuilder();
 
-            // Debug
-            // See this in console its important for the debugging process
-            System.out.println("JSON String: " + jsonString);
+            while (scanner.hasNextLine()) {
+                jsonStringBuilder.append(scanner.nextLine());
+            }
+            String jsonString = jsonStringBuilder.toString();
 
             List<String> base64Strings = parseJsonBody(jsonString);
 
@@ -50,10 +54,12 @@ public class IoDongleByFile {
                 List<IoWikiModel> content = encodeBase64(base64String);
                 dongleModel.add(new IoDongleModel(content));
             }
+            scanner.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+        } finally {
+            return dongleModel;
         }
-        return dongleModel;
     }
 
     private static List<String> parseJsonBody(String jsonString) {
@@ -93,28 +99,33 @@ public class IoDongleByFile {
         byte[] decodedBytes = Base64.getDecoder().decode(bodyInput);
         String decodedString = new String(decodedBytes);
 
+        // Debug
+        System.out.println("Decoded String: " + decodedString);
+
         ObjectMapper objectMapper = new ObjectMapper();
         List<IoWikiModel> content = new ArrayList<>();
 
         try {
-            Scanner myReader = new Scanner(decodedString);
-            while (myReader.hasNextLine()) {
-                String line = myReader.nextLine();
-                String[] parts = line.split(",");
+            Map<String, Object> decodedMap = objectMapper.readValue(
+                decodedString,
+                Map.class
+            );
+            Map<String, Object> stateMap = (Map<String, Object>) decodedMap.get(
+                "state"
+            );
+            Map<String, Object> reportedMap = (Map<
+                    String,
+                    Object
+                >) stateMap.get("reported");
 
-                for (String part : parts) {
-                    String[] items = part.split("=");
-
-                    if (items.length == 2) {
-                        IoWikiModel model = new IoWikiModel(
-                            items[0].replace("{", "").replace(" ", ""),
-                            items[1].replace("}", "")
-                        );
-                        content.add(model);
-                    }
-                }
+            for (Map.Entry<String, Object> entry : reportedMap.entrySet()) {
+                IoWikiModel model = new IoWikiModel(
+                    entry.getKey(),
+                    entry.getValue().toString()
+                );
+                content.add(model);
             }
-        } catch (IllegalStateException e) {
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
         return content;

@@ -1,19 +1,22 @@
 package com.xenya52.fmc003_rest_api.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xenya52.fmc003_rest_api.entity.model.IoDongleModel;
 import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
+import com.xenya52.fmc003_rest_api.repository.IoWikiRepository;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Scanner;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.units.qual.A;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -22,6 +25,9 @@ public class IoDongleByFile {
 
     // Attributes
     private List<IoDongleModel> dongelModel;
+
+    @Autowired
+    IoWikiRepository ioWikiRepository;
 
     // Constructors
     public IoDongleByFile() {
@@ -51,11 +57,13 @@ public class IoDongleByFile {
             List<String> base64Strings = parseJsonBody(jsonString);
 
             for (String base64String : base64Strings) {
-                List<IoWikiModel> content = encodeBase64(base64String);
+                Map<IoWikiModel, String> content = encodeBase64(base64String);
+
                 dongleModel.add(new IoDongleModel(content));
             }
             scanner.close();
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
             e.printStackTrace();
         } finally {
             return dongleModel;
@@ -64,7 +72,6 @@ public class IoDongleByFile {
 
     private static List<String> parseJsonBody(String jsonString) {
         List<String> base64Strings = new ArrayList<>();
-
         // Parse the JSON string
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -95,7 +102,12 @@ public class IoDongleByFile {
         return base64Strings;
     }
 
-    private List<IoWikiModel> encodeBase64(String bodyInput) {
+    private IoWikiModel getIowikiModelById(String id) {
+        Optional<IoWikiModel> ioWikiModel = ioWikiRepository.findById(id);
+        return ioWikiModel.orElse(null);
+    }
+
+    private Map<IoWikiModel, String> encodeBase64(String bodyInput) {
         byte[] decodedBytes = Base64.getDecoder().decode(bodyInput);
         String decodedString = new String(decodedBytes);
 
@@ -103,7 +115,7 @@ public class IoDongleByFile {
         System.out.println("Decoded String: " + decodedString);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        List<IoWikiModel> content = new ArrayList<>();
+        Map<IoWikiModel, String> content = new HashMap<>();
 
         try {
             Map<String, Object> decodedMap = objectMapper.readValue(
@@ -119,13 +131,21 @@ public class IoDongleByFile {
                 >) stateMap.get("reported");
 
             for (Map.Entry<String, Object> entry : reportedMap.entrySet()) {
-                IoWikiModel model = new IoWikiModel(
-                    entry.getKey(),
-                    entry.getValue().toString()
-                );
-                content.add(model);
+                // Debug
+                System.out.println("Key: " + entry.getKey());
+                System.out.println("Value: " + entry.getValue().toString());
+
+                IoWikiModel ioWikiModel = getIowikiModelById(entry.getKey());
+
+                // Debug
+                System.out.println("IoWikiModel: " + ioWikiModel.toJson());
+
+                content.put(ioWikiModel, entry.getValue().toString());
             }
         } catch (JsonProcessingException e) {
+            // Debug
+            System.out.println("Error: Here's the error");
+
             e.printStackTrace();
         }
         return content;

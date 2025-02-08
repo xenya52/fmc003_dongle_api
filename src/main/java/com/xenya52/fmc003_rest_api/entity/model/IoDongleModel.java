@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
 import com.xenya52.fmc003_rest_api.entity.model.IIo;
 import java.util.List;
+import java.util.Map;
 import org.springframework.data.annotation.Id;
 
 public class IoDongleModel implements IIo {
@@ -13,7 +14,7 @@ public class IoDongleModel implements IIo {
     @Id
     private String deviceId; // Device ID
 
-    private List<IoWikiModel> ioWikiModelList; // Params from teltonika io wiki
+    private Map<IoWikiModel, String> ioWikiModelList; // Params from teltonika io wiki
 
     public String getDeviceId() {
         return deviceId;
@@ -24,7 +25,7 @@ public class IoDongleModel implements IIo {
     }
 
     // Constructors
-    public IoDongleModel(List<IoWikiModel> ioWikiModelList) {
+    public IoDongleModel(Map<IoWikiModel, String> ioWikiModelList) {
         this.deviceId = debugCreateRandomID();
         this.ioWikiModelList = ioWikiModelList;
     }

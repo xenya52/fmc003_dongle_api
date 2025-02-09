@@ -57,9 +57,11 @@ public class IoDongleByFile {
             List<String> base64Strings = parseJsonBody(jsonString);
 
             for (String base64String : base64Strings) {
-                Map<IoWikiModel, String> content = encodeBase64(base64String);
+                Map<String, String> dongleIdsAndValues = encodeBase64(
+                    base64String
+                );
 
-                dongleModel.add(new IoDongleModel(content));
+                dongleModel.add(new IoDongleModel(dongleIdsAndValues));
             }
             scanner.close();
         } catch (FileNotFoundException e) {
@@ -107,15 +109,12 @@ public class IoDongleByFile {
         return ioWikiModel.orElse(null);
     }
 
-    private Map<IoWikiModel, String> encodeBase64(String bodyInput) {
+    private Map<String, String> encodeBase64(String bodyInput) {
         byte[] decodedBytes = Base64.getDecoder().decode(bodyInput);
         String decodedString = new String(decodedBytes);
 
-        // Debug
-        System.out.println("Decoded String: " + decodedString);
-
         ObjectMapper objectMapper = new ObjectMapper();
-        Map<IoWikiModel, String> content = new HashMap<>();
+        Map<String, String> content = new HashMap<>();
 
         try {
             Map<String, Object> decodedMap = objectMapper.readValue(
@@ -135,12 +134,10 @@ public class IoDongleByFile {
                 System.out.println("Key: " + entry.getKey());
                 System.out.println("Value: " + entry.getValue().toString());
 
-                IoWikiModel ioWikiModel = getIowikiModelById(entry.getKey());
-
-                // Debug
-                System.out.println("IoWikiModel: " + ioWikiModel.toJson());
-
-                content.put(ioWikiModel, entry.getValue().toString());
+                content.put(
+                    entry.getKey().toString(),
+                    entry.getValue().toString()
+                );
             }
         } catch (JsonProcessingException e) {
             // Debug

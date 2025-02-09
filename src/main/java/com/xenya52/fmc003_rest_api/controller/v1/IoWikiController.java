@@ -40,12 +40,17 @@ public class IoWikiController {
         return new ResponseEntity<>("Debug", HttpStatus.OK);
     }
     */
+    // Todo fix the buggy indexes
     @GetMapping("/items/all")
     public ResponseEntity<List<GetResponseDto>> ioWikiAll() {
         List<GetResponseDto> response = ioWikiService.getIoWikiList();
-        if (response == null) {
+        // Todo
+        // Implement edge cases, at the moment Im getting a error if i try to index the first element of a empty list
+        /**
+        if (response.getFirst() == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        */
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -60,7 +65,7 @@ public class IoWikiController {
             responseList.add(response);
         }
 
-        if (responseList == null) {
+        if (responseList.getFirst() == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(responseList, HttpStatus.OK);

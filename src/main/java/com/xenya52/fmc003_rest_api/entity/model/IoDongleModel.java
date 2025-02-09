@@ -2,9 +2,6 @@ package com.xenya52.fmc003_rest_api.entity.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Optional;
-import com.xenya52.fmc003_rest_api.entity.model.IIo;
-import java.util.List;
 import java.util.Map;
 import org.springframework.data.annotation.Id;
 
@@ -14,7 +11,7 @@ public class IoDongleModel implements IIo {
     @Id
     private String deviceId; // Device ID
 
-    private Map<IoWikiModel, String> ioWikiModelList; // Params from teltonika io wiki
+    private Map<String, String> ioWikiIdAndDongleValues;
 
     public String getDeviceId() {
         return deviceId;
@@ -25,9 +22,9 @@ public class IoDongleModel implements IIo {
     }
 
     // Constructors
-    public IoDongleModel(Map<IoWikiModel, String> ioWikiModelList) {
+    public IoDongleModel(Map<String, String> ioWikiIdsAndValues) {
         this.deviceId = debugCreateRandomID();
-        this.ioWikiModelList = ioWikiModelList;
+        this.ioWikiIdAndDongleValues = ioWikiIdsAndValues;
     }
 
     // Methods
@@ -38,22 +35,6 @@ public class IoDongleModel implements IIo {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return null;
-        }
-    }
-
-    public boolean parseDongleJsonToIoWikiModelList(String json) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            this.ioWikiModelList = objectMapper.readValue(
-                json,
-                objectMapper
-                    .getTypeFactory()
-                    .constructCollectionType(List.class, IoWikiModel.class)
-            );
-            return true;
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return false;
         }
     }
 

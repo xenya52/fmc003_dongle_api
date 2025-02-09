@@ -1,13 +1,15 @@
 package com.xenya52.fmc003_rest_api.entity.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.xenya52.fmc003_rest_api.entity.model.IIo;
-import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
+@Getter
+@Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class IoWikiModel implements IIo {
 
@@ -146,16 +148,5 @@ public class IoWikiModel implements IIo {
 
     public String getWikiName() {
         return wikiName;
-    }
-
-    public String toJson() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.writeValueAsString(this);
-        } catch (Exception e) {
-            // Todo
-            e.printStackTrace();
-            return null;
-        }
     }
 }

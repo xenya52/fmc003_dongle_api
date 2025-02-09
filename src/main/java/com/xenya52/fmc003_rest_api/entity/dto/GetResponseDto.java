@@ -20,9 +20,16 @@ public class GetResponseDto {
     )
     private Date timestamp;
 
+    @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     private IIo data;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private String status;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private String message;
+
+    @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     private Map<String, String> links;
 
     //Constructor

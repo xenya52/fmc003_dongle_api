@@ -36,21 +36,6 @@ public class IoWikiByFile {
         return name == null ? "Property not found" : name;
     }
 
-    /***
-     * Returns the ID of the property
-     * based on the name
-     * @param name
-     * @return a string containing the ID of the property
-     */
-    public String nameToId(String name) {
-        for (IoWikiModel ioWikiModel : idsAndNames) {
-            if (ioWikiModel.getWikiName().equals(name)) {
-                return String.valueOf(ioWikiModel.toJson());
-            }
-        }
-        return "Property not found";
-    }
-
     // Todo find a way to scrape from teltonika wiki
     /***
      * Fetches the IDs and names of the properties

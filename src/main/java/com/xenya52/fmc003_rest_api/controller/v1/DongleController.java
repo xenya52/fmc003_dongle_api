@@ -22,6 +22,9 @@ public class DongleController {
     @Autowired
     private IoDongleService dongleService;
 
+    @Autowired
+    private IoDongleByFile dongleByFile;
+
     // Methods
 
     @GetMapping("/items/{listOfIds}")
@@ -43,20 +46,24 @@ public class DongleController {
     @GetMapping("/fetch-file")
     public ResponseEntity<String> fetchFile() {
         try {
-            // Debug
-            System.out.println("DEBUG - before fetchFile");
-
-            IoDongleByFile dongleByFile = new IoDongleByFile();
+            List<IoDongleModel> dongleList = dongleByFile.getDongleList();
 
             // Debug
-            System.out.println(dongleByFile.getDongleList());
-            System.out.println("DEBUG - after fetchFile");
+            System.out.println("Debug - DongleList in Controller");
+            for (IoDongleModel dongleModel : dongleList) {
+                System.out.println(dongleModel.getDeviceId());
+                for (String key : dongleModel
+                    .getIoWikiIdAndDongleValues()
+                    .keySet()) {
+                    System.out.println(
+                        key +
+                        " : " +
+                        dongleModel.getIoWikiIdAndDongleValues().get(key)
+                    );
+                }
+            }
 
             for (IoDongleModel dongleModel : dongleByFile.getDongleList()) {
-                // Debug
-                System.out.println("DEBUG");
-                System.out.println(dongleModel.toJson());
-
                 dongleService.saveIoDongle(dongleModel);
             }
             return new ResponseEntity<>(HttpStatus.OK);

@@ -49,6 +49,8 @@ public class IoDongleService {
             ioDongleRepository.save(ioDongleModel);
         } catch (Exception e) {
             // TODO fix this
+            // Debug
+            System.out.println("Run into saveIoDongle exception");
         }
     }
 

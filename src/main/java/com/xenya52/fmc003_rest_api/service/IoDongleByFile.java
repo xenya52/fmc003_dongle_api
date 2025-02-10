@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -42,7 +41,7 @@ public class IoDongleByFile {
     private List<IoDongleModel> fetchDongleModel() {
         String filePath = "src/main/resources/teltonikaDongleDataDumby.txt";
 
-        List<IoDongleModel> dongleModel = new ArrayList<>();
+        List<IoDongleModel> dongleList = new ArrayList<>();
 
         try {
             File file = new File(filePath);
@@ -56,19 +55,54 @@ public class IoDongleByFile {
 
             List<String> base64Strings = parseJsonBody(jsonString);
 
+            // Debug
+            System.out.println(
+                "Debug - Base64Strings in ByFile fetchDongleModel"
+            );
             for (String base64String : base64Strings) {
+                System.out.println("Base64 String: ");
+                System.out.println(base64String);
+            }
+
+            for (String base64String : base64Strings) {
+                // Debug
+                System.out.println(
+                    "Debug - DongleIdsAndValues in ByFile fetchDongleModel"
+                );
+
                 Map<String, String> dongleIdsAndValues = encodeBase64(
                     base64String
                 );
 
-                dongleModel.add(new IoDongleModel(dongleIdsAndValues));
+                for (String key : dongleIdsAndValues.keySet()) {
+                    System.out.println(
+                        key + " : " + dongleIdsAndValues.get(key)
+                    );
+                }
+
+                dongleList.add(new IoDongleModel(dongleIdsAndValues));
             }
             scanner.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             e.printStackTrace();
         } finally {
-            return dongleModel;
+            // Debug
+            System.out.println("Debug - DongleList in ByFile fetchDongleModel");
+            for (IoDongleModel dongleModel : dongleList) {
+                System.out.println(dongleModel.getDeviceId());
+                for (String key : dongleModel
+                    .getIoWikiIdAndDongleValues()
+                    .keySet()) {
+                    System.out.println(
+                        key +
+                        " : " +
+                        dongleModel.getIoWikiIdAndDongleValues().get(key)
+                    );
+                }
+            }
+
+            return dongleList;
         }
     }
 
@@ -100,7 +134,6 @@ public class IoDongleByFile {
 
             e.printStackTrace();
         }
-
         return base64Strings;
     }
 
@@ -130,10 +163,6 @@ public class IoDongleByFile {
                 >) stateMap.get("reported");
 
             for (Map.Entry<String, Object> entry : reportedMap.entrySet()) {
-                // Debug
-                System.out.println("Key: " + entry.getKey());
-                System.out.println("Value: " + entry.getValue().toString());
-
                 content.put(
                     entry.getKey().toString(),
                     entry.getValue().toString()

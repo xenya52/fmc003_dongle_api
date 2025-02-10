@@ -28,6 +28,10 @@ public class IoDongleModel implements IIo {
     }
 
     // Methods
+    public Map<String, String> getIoWikiIdAndDongleValues() {
+        return ioWikiIdAndDongleValues;
+    }
+
     public String toJson() {
         ObjectMapper objectMapper = new ObjectMapper();
         try {

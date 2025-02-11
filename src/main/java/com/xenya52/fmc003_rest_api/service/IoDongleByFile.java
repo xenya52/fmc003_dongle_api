@@ -1,7 +1,9 @@
 package com.xenya52.fmc003_rest_api.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xenya52.fmc003_rest_api.controller.v1.DongleController;
 import com.xenya52.fmc003_rest_api.entity.model.IoDongleModel;
 import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
 import com.xenya52.fmc003_rest_api.repository.IoWikiRepository;
@@ -55,53 +57,18 @@ public class IoDongleByFile {
 
             List<String> base64Strings = parseJsonBody(jsonString);
 
-            // Debug
-            System.out.println(
-                "Debug - Base64Strings in ByFile fetchDongleModel"
+            List<Map<String, String>> dongleIdsAndValues = decodeBase64(
+                base64Strings
             );
-            for (String base64String : base64Strings) {
-                System.out.println("Base64 String: ");
-                System.out.println(base64String);
-            }
 
-            for (String base64String : base64Strings) {
-                // Debug
-                System.out.println(
-                    "Debug - DongleIdsAndValues in ByFile fetchDongleModel"
-                );
-
-                Map<String, String> dongleIdsAndValues = encodeBase64(
-                    base64String
-                );
-
-                for (String key : dongleIdsAndValues.keySet()) {
-                    System.out.println(
-                        key + " : " + dongleIdsAndValues.get(key)
-                    );
-                }
-
-                dongleList.add(new IoDongleModel(dongleIdsAndValues));
+            for (Map<String, String> dongleIdAndValue : dongleIdsAndValues) {
+                IoDongleModel dongleModel = new IoDongleModel(dongleIdAndValue);
+                dongleList.add(dongleModel);
             }
             scanner.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            e.printStackTrace();
         } finally {
-            // Debug
-            System.out.println("Debug - DongleList in ByFile fetchDongleModel");
-            for (IoDongleModel dongleModel : dongleList) {
-                System.out.println(dongleModel.getDeviceId());
-                for (String key : dongleModel
-                    .getIoWikiIdAndDongleValues()
-                    .keySet()) {
-                    System.out.println(
-                        key +
-                        " : " +
-                        dongleModel.getIoWikiIdAndDongleValues().get(key)
-                    );
-                }
-            }
-
             return dongleList;
         }
     }
@@ -142,38 +109,78 @@ public class IoDongleByFile {
         return ioWikiModel.orElse(null);
     }
 
-    private Map<String, String> encodeBase64(String bodyInput) {
-        byte[] decodedBytes = Base64.getDecoder().decode(bodyInput);
-        String decodedString = new String(decodedBytes);
+    private List<Map<String, String>> decodeBase64(List<String> base64Strings) {
+        List<String> decodedList = new ArrayList<>();
+
+        // Debug
+        System.out.println("ioDongleByFile - decodeBase64 - base64Strings: ");
+        for (String base64String : base64Strings) {
+            System.out.println(base64String);
+        }
+
+        for (String base64String : base64Strings) {
+            try {
+                base64String = base64String.replaceAll("\\s+", "");
+                byte[] decodedBytes = Base64.getDecoder().decode(base64String);
+                String decodedString = new String(decodedBytes);
+                decodedList.add(decodedString);
+            } catch (IllegalArgumentException e) {
+                // Todo - Handle exception better
+                System.out.println(
+                    "Error decoding Base64 string: " + e.getMessage()
+                );
+                e.printStackTrace();
+            }
+        }
+
+        // Debug
+        System.out.println("ioDongleByFile - decodeBase64 - decodedList: ");
+        for (String decodedString : decodedList) {
+            System.out.println(decodedString);
+        }
 
         ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, String> content = new HashMap<>();
+        List<Map<String, String>> dongleIdsAndValues = new ArrayList<>();
 
-        try {
-            Map<String, Object> decodedMap = objectMapper.readValue(
-                decodedString,
-                Map.class
-            );
-            Map<String, Object> stateMap = (Map<String, Object>) decodedMap.get(
-                "state"
-            );
-            Map<String, Object> reportedMap = (Map<
-                    String,
-                    Object
-                >) stateMap.get("reported");
-
-            for (Map.Entry<String, Object> entry : reportedMap.entrySet()) {
-                content.put(
-                    entry.getKey().toString(),
-                    entry.getValue().toString()
+        for (String decodedString : decodedList) {
+            try {
+                Map<String, Object> decodedMap = objectMapper.readValue(
+                    decodedString,
+                    new TypeReference<Map<String, Object>>() {}
                 );
-            }
-        } catch (JsonProcessingException e) {
-            // Debug
-            System.out.println("Error: Here's the error");
 
-            e.printStackTrace();
+                // Todo fix Java: Type safety: Unchecked cast from Object to Map<String,Object>
+                Map<String, String> dongleIdAndValue = new HashMap<>();
+                if (decodedMap.containsKey("state")) {
+                    Map<String, Object> stateMap = (Map<
+                            String,
+                            Object
+                        >) decodedMap.get("state");
+                    if (stateMap.containsKey("reported")) {
+                        Map<String, Object> reportedMap = (Map<
+                                String,
+                                Object
+                            >) stateMap.get("reported");
+                        for (Map.Entry<
+                            String,
+                            Object
+                        > entry : reportedMap.entrySet()) {
+                            dongleIdAndValue.put(
+                                entry.getKey(),
+                                entry.getValue().toString()
+                            );
+                        }
+                    }
+                }
+                dongleIdsAndValues.add(dongleIdAndValue);
+            } catch (JsonProcessingException e) {
+                // Todo - Handle exception better
+                System.out.println(
+                    "Error parsing JSON string: " + e.getMessage()
+                );
+                e.printStackTrace();
+            }
         }
-        return content;
+        return dongleIdsAndValues;
     }
 }

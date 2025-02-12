@@ -1,7 +1,5 @@
 package com.xenya52.fmc003_rest_api.entity.model;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
 import org.springframework.data.annotation.Id;
 
@@ -11,7 +9,7 @@ public class IoDongleModel implements IIo {
     @Id
     private String deviceId; // Device ID
 
-    private Map<String, String> ioWikiIdAndDongleValues;
+    private Map<IoWikiModel, String> ioWikiIdAndDongleValues;
 
     public String getDeviceId() {
         return deviceId;
@@ -22,24 +20,14 @@ public class IoDongleModel implements IIo {
     }
 
     // Constructors
-    public IoDongleModel(Map<String, String> ioWikiIdsAndValues) {
+    public IoDongleModel(Map<IoWikiModel, String> ioWikiIdsAndValues) {
         this.deviceId = debugCreateRandomID();
         this.ioWikiIdAndDongleValues = ioWikiIdsAndValues;
     }
 
     // Methods
-    public Map<String, String> getIoWikiIdAndDongleValues() {
+    public Map<IoWikiModel, String> getIoWikiIdAndDongleValues() {
         return ioWikiIdAndDongleValues;
-    }
-
-    public String toJson() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     private String debugCreateRandomID() {

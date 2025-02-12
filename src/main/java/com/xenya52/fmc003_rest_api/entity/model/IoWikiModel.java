@@ -149,4 +149,15 @@ public class IoWikiModel implements IIo {
     public String getWikiName() {
         return wikiName;
     }
+
+    @Override
+    public String toString() {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(this);
+        } catch (Exception e) {
+            // Todo better exception handling
+            return "Todo IlligalArgumentException Todo better exception handling";
+        }
+    }
 }

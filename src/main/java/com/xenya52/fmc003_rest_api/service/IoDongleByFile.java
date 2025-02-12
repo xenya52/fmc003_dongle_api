@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xenya52.fmc003_rest_api.controller.v1.DongleController;
+import com.xenya52.fmc003_rest_api.controller.v1.IoWikiController;
 import com.xenya52.fmc003_rest_api.entity.model.IoDongleModel;
 import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
 import com.xenya52.fmc003_rest_api.repository.IoWikiRepository;
@@ -33,6 +34,16 @@ public class IoDongleByFile {
     // Constructors
     public IoDongleByFile() {
         this.dongelModel = fetchDongleModel();
+
+        // Debug
+        System.out.println("IoDongleByFile: " + dongelModel.size());
+        for (IoDongleModel dongleModel : dongelModel) {
+            for (Map.Entry<IoWikiModel, String> ioWikiIdsAndValues : dongleModel
+                .getIoWikiIdAndDongleValues()
+                .entrySet()) {
+                System.out.println("TEST");
+            }
+        }
     }
 
     // Methods
@@ -57,11 +68,14 @@ public class IoDongleByFile {
 
             List<String> base64Strings = parseJsonBody(jsonString);
 
-            List<Map<String, String>> dongleIdsAndValues = decodeBase64(
+            List<Map<IoWikiModel, String>> dongleIdsAndValues = decodeBase64(
                 base64Strings
             );
 
-            for (Map<String, String> dongleIdAndValue : dongleIdsAndValues) {
+            for (Map<
+                IoWikiModel,
+                String
+            > dongleIdAndValue : dongleIdsAndValues) {
                 IoDongleModel dongleModel = new IoDongleModel(dongleIdAndValue);
                 dongleList.add(dongleModel);
             }
@@ -109,14 +123,10 @@ public class IoDongleByFile {
         return ioWikiModel.orElse(null);
     }
 
-    private List<Map<String, String>> decodeBase64(List<String> base64Strings) {
+    private List<Map<IoWikiModel, String>> decodeBase64(
+        List<String> base64Strings
+    ) {
         List<String> decodedList = new ArrayList<>();
-
-        // Debug
-        System.out.println("ioDongleByFile - decodeBase64 - base64Strings: ");
-        for (String base64String : base64Strings) {
-            System.out.println(base64String);
-        }
 
         for (String base64String : base64Strings) {
             try {
@@ -133,14 +143,8 @@ public class IoDongleByFile {
             }
         }
 
-        // Debug
-        System.out.println("ioDongleByFile - decodeBase64 - decodedList: ");
-        for (String decodedString : decodedList) {
-            System.out.println(decodedString);
-        }
-
         ObjectMapper objectMapper = new ObjectMapper();
-        List<Map<String, String>> dongleIdsAndValues = new ArrayList<>();
+        List<Map<IoWikiModel, String>> dongleIdsAndValues = new ArrayList<>();
 
         for (String decodedString : decodedList) {
             try {
@@ -150,7 +154,7 @@ public class IoDongleByFile {
                 );
 
                 // Todo fix Java: Type safety: Unchecked cast from Object to Map<String,Object>
-                Map<String, String> dongleIdAndValue = new HashMap<>();
+                Map<IoWikiModel, String> dongleIdAndValue = new HashMap<>();
                 if (decodedMap.containsKey("state")) {
                     Map<String, Object> stateMap = (Map<
                             String,
@@ -166,7 +170,7 @@ public class IoDongleByFile {
                             Object
                         > entry : reportedMap.entrySet()) {
                             dongleIdAndValue.put(
-                                entry.getKey(),
+                                getIowikiModelById(entry.getKey()),
                                 entry.getValue().toString()
                             );
                         }

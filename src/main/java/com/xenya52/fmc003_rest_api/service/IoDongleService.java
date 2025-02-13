@@ -2,6 +2,7 @@ package com.xenya52.fmc003_rest_api.service;
 
 import com.xenya52.fmc003_rest_api.entity.dto.GetResponseDto;
 import com.xenya52.fmc003_rest_api.entity.model.IoDongleModel;
+import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
 import com.xenya52.fmc003_rest_api.repository.IoDongleRepository;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -50,6 +51,7 @@ public class IoDongleService {
         } catch (Exception e) {
             // TODO fix this
             // Debug
+            System.out.println(e.toString());
             System.out.println("Run into saveIoDongle exception");
         }
     }

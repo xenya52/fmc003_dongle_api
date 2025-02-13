@@ -49,21 +49,15 @@ public class DongleController {
             List<IoDongleModel> dongleList = dongleByFile.getDongleList();
 
             // Debug
-            System.out.println("Debug - DongleList in Controller");
+            System.out.println("Dongle List:");
             for (IoDongleModel dongleModel : dongleList) {
-                System.out.println(dongleModel.getDeviceId());
-                for (String key : dongleModel
-                    .getIoWikiIdAndDongleValues()
-                    .keySet()) {
-                    System.out.println(
-                        key +
-                        " : " +
-                        dongleModel.getIoWikiIdAndDongleValues().get(key)
-                    );
-                }
+                System.out.println("!");
+                System.out.println(
+                    dongleModel.getIoWikiIdAndDongleValues().toString()
+                );
             }
 
-            for (IoDongleModel dongleModel : dongleByFile.getDongleList()) {
+            for (IoDongleModel dongleModel : dongleList) {
                 dongleService.saveIoDongle(dongleModel);
             }
             return new ResponseEntity<>(HttpStatus.OK);

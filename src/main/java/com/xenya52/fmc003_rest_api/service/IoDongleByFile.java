@@ -36,13 +36,9 @@ public class IoDongleByFile {
         this.dongelModel = fetchDongleModel();
 
         // Debug
-        System.out.println("IoDongleByFile: " + dongelModel.size());
+        System.out.println("IoDongleByFile:");
         for (IoDongleModel dongleModel : dongelModel) {
-            for (Map.Entry<IoWikiModel, String> ioWikiIdsAndValues : dongleModel
-                .getIoWikiIdAndDongleValues()
-                .entrySet()) {
-                System.out.println("TEST");
-            }
+            System.out.println(dongleModel.toString());
         }
     }
 
@@ -143,6 +139,12 @@ public class IoDongleByFile {
             }
         }
 
+        // Debug
+        System.out.println("Decoded List:");
+        for (String decodedString : decodedList) {
+            System.out.println(decodedString);
+        }
+
         ObjectMapper objectMapper = new ObjectMapper();
         List<Map<IoWikiModel, String>> dongleIdsAndValues = new ArrayList<>();
 
@@ -170,13 +172,22 @@ public class IoDongleByFile {
                             Object
                         > entry : reportedMap.entrySet()) {
                             dongleIdAndValue.put(
-                                getIowikiModelById(entry.getKey()),
+                                new IoWikiModel(entry.getKey(), "Debug"),
                                 entry.getValue().toString()
                             );
                         }
                     }
                 }
                 dongleIdsAndValues.add(dongleIdAndValue);
+
+                // Debug
+                System.out.println("DonglesIdsAndValues:");
+                for (Map<
+                    IoWikiModel,
+                    String
+                > dongleIdAndValuee : dongleIdsAndValues) {
+                    System.out.println(dongleIdAndValuee.toString());
+                }
             } catch (JsonProcessingException e) {
                 // Todo - Handle exception better
                 System.out.println(

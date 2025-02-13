@@ -1,16 +1,13 @@
 package com.xenya52.fmc003_rest_api.entity.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class IoWikiModel implements IIo {
 
     // Attributes
@@ -152,12 +149,40 @@ public class IoWikiModel implements IIo {
 
     @Override
     public String toString() {
+        ObjectMapper mapper = new ObjectMapper();
         try {
-            ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(this);
-        } catch (Exception e) {
-            // Todo better exception handling
-            return "Todo IlligalArgumentException Todo better exception handling";
+        } catch (JsonProcessingException e) {
+            // Todo fix debug
+            System.out.print("DEBUG");
+            return (
+                "IoWikiModel{" +
+                "wikiId='" +
+                wikiId +
+                '\'' +
+                ", wikiName='" +
+                wikiName +
+                '\'' +
+                ", wikiDescription='" +
+                wikiDescription +
+                '\'' +
+                ", wikiType='" +
+                wikiType +
+                '\'' +
+                ", multiplier='" +
+                multiplier +
+                '\'' +
+                ", valMin='" +
+                valMin +
+                '\'' +
+                ", valMax='" +
+                valMax +
+                '\'' +
+                ", unit='" +
+                unit +
+                '\'' +
+                '}'
+            );
         }
     }
 }

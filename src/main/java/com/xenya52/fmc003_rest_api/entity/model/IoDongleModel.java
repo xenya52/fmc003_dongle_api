@@ -1,6 +1,11 @@
 package com.xenya52.fmc003_rest_api.entity.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xenya52.fmc003_rest_api.service.IoWikiByFile;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import org.springframework.data.annotation.Id;
 
 public class IoDongleModel implements IIo {
@@ -9,7 +14,9 @@ public class IoDongleModel implements IIo {
     @Id
     private String deviceId; // Device ID
 
-    private Map<IoWikiModel, String> ioWikiIdAndDongleValues;
+    private Map<String, String> wikiIdAndDongleValues;
+
+    private Set<IoWikiModel> ioWikiModels = new HashSet<>();
 
     public String getDeviceId() {
         return deviceId;
@@ -20,19 +27,36 @@ public class IoDongleModel implements IIo {
     }
 
     // Constructors
-    public IoDongleModel(Map<IoWikiModel, String> ioWikiIdsAndValues) {
+    public IoDongleModel(Map<String, String> ioWikiIdsAndValues) {
         this.deviceId = debugCreateRandomID();
-        this.ioWikiIdAndDongleValues = ioWikiIdsAndValues;
+        this.wikiIdAndDongleValues = ioWikiIdsAndValues;
     }
 
     // Methods
-    public Map<IoWikiModel, String> getIoWikiIdAndDongleValues() {
-        return ioWikiIdAndDongleValues;
+    public Map<String, String> getIoWikiIdAndDongleValues() {
+        return wikiIdAndDongleValues;
     }
 
     private String debugCreateRandomID() {
         // Get random number
         int random = (int) (Math.random() * 1000000);
         return String.valueOf(random);
+    }
+
+    @Override
+    public String toString() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return (
+                "IoDongleModel{deviceId='" +
+                deviceId +
+                "', ioWikiIdAndDongleValues=" +
+                wikiIdAndDongleValues +
+                "}"
+            );
+        }
     }
 }

@@ -64,14 +64,11 @@ public class IoDongleByFile {
 
             List<String> base64Strings = parseJsonBody(jsonString);
 
-            List<Map<IoWikiModel, String>> dongleIdsAndValues = decodeBase64(
+            List<Map<String, String>> dongleIdsAndValues = decodeBase64(
                 base64Strings
             );
 
-            for (Map<
-                IoWikiModel,
-                String
-            > dongleIdAndValue : dongleIdsAndValues) {
+            for (Map<String, String> dongleIdAndValue : dongleIdsAndValues) {
                 IoDongleModel dongleModel = new IoDongleModel(dongleIdAndValue);
                 dongleList.add(dongleModel);
             }
@@ -119,9 +116,7 @@ public class IoDongleByFile {
         return ioWikiModel.orElse(null);
     }
 
-    private List<Map<IoWikiModel, String>> decodeBase64(
-        List<String> base64Strings
-    ) {
+    private List<Map<String, String>> decodeBase64(List<String> base64Strings) {
         List<String> decodedList = new ArrayList<>();
 
         for (String base64String : base64Strings) {
@@ -146,7 +141,7 @@ public class IoDongleByFile {
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
-        List<Map<IoWikiModel, String>> dongleIdsAndValues = new ArrayList<>();
+        List<Map<String, String>> dongleIdsAndValues = new ArrayList<>();
 
         for (String decodedString : decodedList) {
             try {
@@ -156,7 +151,7 @@ public class IoDongleByFile {
                 );
 
                 // Todo fix Java: Type safety: Unchecked cast from Object to Map<String,Object>
-                Map<IoWikiModel, String> dongleIdAndValue = new HashMap<>();
+                Map<String, String> dongleIdAndValue = new HashMap<>();
                 if (decodedMap.containsKey("state")) {
                     Map<String, Object> stateMap = (Map<
                             String,
@@ -172,7 +167,7 @@ public class IoDongleByFile {
                             Object
                         > entry : reportedMap.entrySet()) {
                             dongleIdAndValue.put(
-                                new IoWikiModel(entry.getKey(), "Debug"),
+                                entry.getKey(),
                                 entry.getValue().toString()
                             );
                         }
@@ -183,7 +178,7 @@ public class IoDongleByFile {
                 // Debug
                 System.out.println("DonglesIdsAndValues:");
                 for (Map<
-                    IoWikiModel,
+                    String,
                     String
                 > dongleIdAndValuee : dongleIdsAndValues) {
                     System.out.println(dongleIdAndValuee.toString());

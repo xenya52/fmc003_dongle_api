@@ -2,7 +2,6 @@ package com.xenya52.fmc003_rest_api.entity.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.xenya52.fmc003_rest_api.service.IoWikiByFile;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -30,6 +29,11 @@ public class IoDongleModel implements IIo {
     public IoDongleModel(Map<String, String> ioWikiIdsAndValues) {
         this.deviceId = debugCreateRandomID();
         this.wikiIdAndDongleValues = ioWikiIdsAndValues;
+    }
+
+    // Todo implement a no args constructor
+    public IoDongleModel() {
+        this.deviceId = debugCreateRandomID();
     }
 
     // Methods

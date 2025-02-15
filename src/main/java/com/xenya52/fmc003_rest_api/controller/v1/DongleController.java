@@ -43,6 +43,9 @@ public class DongleController {
         return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
 
+    // Methods
+    // Todo make a own mongoService for this without that restapi
+    /*
     @GetMapping("/fetch-file")
     public ResponseEntity<String> fetchFile() {
         try {
@@ -65,6 +68,7 @@ public class DongleController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    */
 
     @GetMapping("/items/all")
     public ResponseEntity<List<GetResponseDto>> dongleAll() {

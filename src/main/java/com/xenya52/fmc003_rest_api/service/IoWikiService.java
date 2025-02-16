@@ -26,13 +26,25 @@ public class IoWikiService {
     // Methods
     public GetResponseDto getIoWikiById(String id) {
         IoWikiModel wikiModel = ioWikiRepository.findByWikiId(id).orElse(null);
-        Map<String, String> links = Map.of(
-            "prev",
-            getPrevId(id),
-            "next",
-            getNextId(id)
-        );
-        return wikiModel == null ? null : new GetResponseDto(wikiModel, links);
+        try {
+            Map<String, String> links = Map.of(
+                "prev",
+                getPrevId(id),
+                "next",
+                getNextId(id)
+            );
+            return wikiModel == null
+                ? null
+                : new GetResponseDto(wikiModel, links);
+        } catch (IllegalArgumentException iae) {
+            throw new IllegalArgumentException(
+                "IllegalArgumentException: The id is not valid. Please provide a valid id."
+            );
+        } catch (NullPointerException npe) {
+            throw new NullPointerException(
+                "NullPointerException: The id is not valid. Please provide a valid id."
+            );
+        }
     }
 
     public GetResponseDto getIoWikiByName(String name) {
@@ -51,20 +63,39 @@ public class IoWikiService {
     public List<GetResponseDto> getIoWikiList() {
         List<IoWikiModel> ioWikiModelList = ioWikiRepository.findAll();
         List<GetResponseDto> ioWikiDtoList = new ArrayList<>();
-
-        for (IoWikiModel ioWikiModel : ioWikiModelList) {
-            // Next and Previous id are unnecessary if I get the whole list. Furthermore it saves time
-            // Todo: Idk... is "null" bad practice? In this case?
-            ioWikiDtoList.add(new GetResponseDto(ioWikiModel, null));
+        try {
+            for (IoWikiModel ioWikiModel : ioWikiModelList) {
+                // Next and Previous id are unnecessary if I get the whole list. Furthermore it saves time
+                // Todo: Idk... is "null" bad practice? In this case?
+                ioWikiDtoList.add(new GetResponseDto(ioWikiModel, null));
+            }
+        } catch (IllegalArgumentException iae) {
+            throw new IllegalArgumentException(
+                "IllegalArgumentException: The id is not valid. Please provide a valid id."
+            );
+        } catch (NullPointerException npe) {
+            throw new NullPointerException(
+                "NullPointerException: The id is not valid. Please provide a valid id."
+            );
         }
         return ioWikiDtoList;
     }
 
     public boolean saveIoWikiList(List<IoWikiModel> ioWikiList) {
-        for (IoWikiModel ioWikiModel : ioWikiList) {
-            if (!saveIoWiki(ioWikiModel)) {
-                return false;
+        try {
+            for (IoWikiModel ioWikiModel : ioWikiList) {
+                if (!saveIoWiki(ioWikiModel)) {
+                    return false;
+                }
             }
+        } catch (IllegalArgumentException iae) {
+            throw new IllegalArgumentException(
+                "IllegalArgumentException: The id is not valid. Please provide a valid id."
+            );
+        } catch (NullPointerException npe) {
+            throw new NullPointerException(
+                "NullPointerException: The id is not valid. Please provide a valid id."
+            );
         }
         return true;
     }
@@ -73,49 +104,67 @@ public class IoWikiService {
     private boolean saveIoWiki(IoWikiModel ioWikiModel) {
         try {
             ioWikiRepository.save(ioWikiModel);
-        } catch (
-            IllegalArgumentException | OptimisticLockingFailureException e
-        ) {
-            // Todo make it more specific
-            // https://medium.com/@aedemirsen/spring-boot-global-exception-handler-842d7143cf2a
-            return false;
+        } catch (IllegalArgumentException iae) {
+            throw new IllegalArgumentException(
+                "IllegalArgumentException: The given IoDongleModel is not valid."
+            );
+        } catch (OptimisticLockingFailureException npe) {
+            throw new OptimisticLockingFailureException(
+                "OptimisticLockingFailureException: The given IoDongleModel has already changed his state in the database."
+            );
         }
         return true;
     }
 
     private String getPrevId(String id) {
         List<IoWikiModel> ioWikiModelList = ioWikiRepository.findAll();
-        ioWikiModelList.sort(Comparator.comparing(IoWikiModel::getWikiIdAsInt));
-        int index = ioWikiModelList.indexOf(
-            ioWikiModelList
-                .stream()
-                .filter(wikiModel -> wikiModel.getWikiId().equals(id))
-                .findFirst()
-                .orElse(null)
-        );
+        try {
+            ioWikiModelList.sort(
+                Comparator.comparing(IoWikiModel::getWikiIdAsInt)
+            );
+            int index = ioWikiModelList.indexOf(
+                ioWikiModelList
+                    .stream()
+                    .filter(wikiModel -> wikiModel.getWikiId().equals(id))
+                    .findFirst()
+                    .orElse(null)
+            );
 
-        if (index > 0) {
-            return ioWikiModelList.get(index - 1).getWikiId();
-        } else {
-            return "";
+            if (index > 0) {
+                return ioWikiModelList.get(index - 1).getWikiId();
+            } else {
+                return "";
+            }
+        } catch (NullPointerException npe) {
+            throw new NullPointerException(
+                "NullPointerException: The id is not valid. Please provide a valid id."
+            );
         }
     }
 
     private String getNextId(String id) {
         List<IoWikiModel> ioWikiModelList = ioWikiRepository.findAll();
-        ioWikiModelList.sort(Comparator.comparing(IoWikiModel::getWikiIdAsInt));
-        int index = ioWikiModelList.indexOf(
-            ioWikiModelList
-                .stream()
-                .filter(wikiModel -> wikiModel.getWikiId().equals(id))
-                .findFirst()
-                .orElse(null)
-        );
+        try {
+            ioWikiModelList.sort(
+                Comparator.comparing(IoWikiModel::getWikiIdAsInt)
+            );
+            int index = ioWikiModelList.indexOf(
+                ioWikiModelList
+                    .stream()
+                    .filter(wikiModel -> wikiModel.getWikiId().equals(id))
+                    .findFirst()
+                    .orElse(null)
+            );
 
-        if (index >= 0 && index < ioWikiModelList.size() - 1) {
-            return ioWikiModelList.get(index + 1).getWikiId();
-        } else {
-            return "";
+            if (index >= 0 && index < ioWikiModelList.size() - 1) {
+                return ioWikiModelList.get(index + 1).getWikiId();
+            } else {
+                return "";
+            }
+        } catch (NullPointerException npe) {
+            throw new NullPointerException(
+                "NullPointerException: The id is not valid. Please provide a valid id."
+            );
         }
     }
 }

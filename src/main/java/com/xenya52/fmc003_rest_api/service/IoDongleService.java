@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -38,9 +39,14 @@ public class IoDongleService {
             return dongleModel == null
                 ? null
                 : new GetResponseDto(dongleModel, links);
-        } catch (Exception e) {
-            // Todo implement logging and exception handling
-            return null;
+        } catch (IllegalArgumentException iae) {
+            throw new IllegalArgumentException(
+                "IllegalArgumentException: The id is not valid. Please provide a valid id."
+            );
+        } catch (NullPointerException npe) {
+            throw new NullPointerException(
+                "NullPointerException: The id is not valid. Please provide a valid id."
+            );
         }
     }
 
@@ -48,11 +54,14 @@ public class IoDongleService {
     public void saveIoDongle(IoDongleModel ioDongleModel) {
         try {
             ioDongleRepository.save(ioDongleModel);
-        } catch (Exception e) {
-            // TODO fix this
-            // Debug
-            System.out.println(e.toString());
-            System.out.println("Run into saveIoDongle exception");
+        } catch (IllegalArgumentException iae) {
+            throw new IllegalArgumentException(
+                "IllegalArgumentException: The given IoDongleModel is not valid."
+            );
+        } catch (OptimisticLockingFailureException npe) {
+            throw new OptimisticLockingFailureException(
+                "OptimisticLockingFailureException: The given IoDongleModel has already changed his state in the database."
+            );
         }
     }
 
@@ -70,41 +79,53 @@ public class IoDongleService {
 
     private String getPrevId(String id) {
         List<IoDongleModel> ioDongleModelList = ioDongleRepository.findAll();
-        ioDongleModelList.sort(
-            Comparator.comparing(IoDongleModel::getDeviceId)
-        );
-        int index = 0;
-        for (int i = 0; i < ioDongleModelList.size(); i++) {
-            if (ioDongleModelList.get(i).getDeviceId().equals(id)) {
-                index = i;
-                break;
+        try {
+            ioDongleModelList.sort(
+                Comparator.comparing(IoDongleModel::getDeviceId)
+            );
+            int index = 0;
+            for (int i = 0; i < ioDongleModelList.size(); i++) {
+                if (ioDongleModelList.get(i).getDeviceId().equals(id)) {
+                    index = i;
+                    break;
+                }
             }
-        }
-        if (index == 0) {
-            return ioDongleModelList
-                .get(ioDongleModelList.size() - 1)
-                .getDeviceId();
-        } else {
-            return ioDongleModelList.get(index - 1).getDeviceId();
+            if (index == 0) {
+                return ioDongleModelList
+                    .get(ioDongleModelList.size() - 1)
+                    .getDeviceId();
+            } else {
+                return ioDongleModelList.get(index - 1).getDeviceId();
+            }
+        } catch (NullPointerException npe) {
+            throw new NullPointerException(
+                "NullPointerException: The id is not valid. Please provide a valid id."
+            );
         }
     }
 
     private String getNextId(String id) {
         List<IoDongleModel> ioDongleModelList = ioDongleRepository.findAll();
-        ioDongleModelList.sort(
-            Comparator.comparing(IoDongleModel::getDeviceId)
-        );
-        int index = 0;
-        for (int i = 0; i < ioDongleModelList.size(); i++) {
-            if (ioDongleModelList.get(i).getDeviceId().equals(id)) {
-                index = i;
-                break;
+        try {
+            ioDongleModelList.sort(
+                Comparator.comparing(IoDongleModel::getDeviceId)
+            );
+            int index = 0;
+            for (int i = 0; i < ioDongleModelList.size(); i++) {
+                if (ioDongleModelList.get(i).getDeviceId().equals(id)) {
+                    index = i;
+                    break;
+                }
             }
-        }
-        if (index == ioDongleModelList.size() - 1) {
-            return ioDongleModelList.get(0).getDeviceId();
-        } else {
-            return ioDongleModelList.get(index + 1).getDeviceId();
+            if (index == ioDongleModelList.size() - 1) {
+                return ioDongleModelList.get(0).getDeviceId();
+            } else {
+                return ioDongleModelList.get(index + 1).getDeviceId();
+            }
+        } catch (NullPointerException npe) {
+            throw new NullPointerException(
+                "NullPointerException: The id is not valid. Please provide a valid id."
+            );
         }
     }
 }

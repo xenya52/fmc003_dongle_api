@@ -43,7 +43,7 @@ public class IoWikiModel implements IIo {
         this.unit = unit;
     }
 
-    //Debug todo remove this soon
+    //Todo remove this soon
     public IoWikiModel() {
         this("debug", "-", "-", "-", "-", "-", "-", "-");
     }

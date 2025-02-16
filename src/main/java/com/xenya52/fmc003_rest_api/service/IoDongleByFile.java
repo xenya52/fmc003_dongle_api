@@ -32,12 +32,6 @@ public class IoDongleByFile {
     // Constructors
     public IoDongleByFile() {
         this.dongelModel = fetchDongleModel();
-
-        // Debug
-        System.out.println("IoDongleByFile:");
-        for (IoDongleModel dongleModel : dongelModel) {
-            System.out.println(dongleModel.toString());
-        }
     }
 
     // Methods
@@ -134,12 +128,6 @@ public class IoDongleByFile {
             }
         }
 
-        // Debug
-        System.out.println("Decoded List:");
-        for (String decodedString : decodedList) {
-            System.out.println(decodedString);
-        }
-
         ObjectMapper objectMapper = new ObjectMapper();
         List<Map<String, String>> dongleIdsAndValues = new ArrayList<>();
 
@@ -174,15 +162,6 @@ public class IoDongleByFile {
                     }
                 }
                 dongleIdsAndValues.add(dongleIdAndValue);
-
-                // Debug
-                System.out.println("DonglesIdsAndValues:");
-                for (Map<
-                    String,
-                    String
-                > dongleIdAndValuee : dongleIdsAndValues) {
-                    System.out.println(dongleIdAndValuee.toString());
-                }
             } catch (JsonProcessingException e) {
                 // Todo - Handle exception better
                 System.out.println(

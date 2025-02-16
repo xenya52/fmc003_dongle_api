@@ -4,11 +4,9 @@ import com.xenya52.fmc003_rest_api.entity.dto.GetResponseDto;
 import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
 import com.xenya52.fmc003_rest_api.repository.IoWikiRepository;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
@@ -55,13 +53,9 @@ public class IoWikiService {
         List<GetResponseDto> ioWikiDtoList = new ArrayList<>();
 
         for (IoWikiModel ioWikiModel : ioWikiModelList) {
-            Map<String, String> links = Map.of(
-                "prev",
-                getNextId(ioWikiModel.getWikiId()),
-                "next",
-                getNextId(ioWikiModel.getWikiId())
-            );
-            ioWikiDtoList.add(new GetResponseDto(ioWikiModel, links));
+            // Next and Previous id are unnecessary if I get the whole list. Furthermore it saves time
+            // Todo: Idk... is "null" bad practice? In this case?
+            ioWikiDtoList.add(new GetResponseDto(ioWikiModel, null));
         }
         return ioWikiDtoList;
     }

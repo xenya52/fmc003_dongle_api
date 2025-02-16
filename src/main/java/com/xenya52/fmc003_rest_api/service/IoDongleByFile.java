@@ -3,8 +3,6 @@ package com.xenya52.fmc003_rest_api.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.xenya52.fmc003_rest_api.controller.v1.DongleController;
-import com.xenya52.fmc003_rest_api.controller.v1.IoWikiController;
 import com.xenya52.fmc003_rest_api.entity.model.IoDongleModel;
 import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
 import com.xenya52.fmc003_rest_api.repository.IoWikiRepository;
@@ -64,7 +62,7 @@ public class IoDongleByFile {
 
             List<String> base64Strings = parseJsonBody(jsonString);
 
-            List<Map<String, String>> dongleIdsAndValues = decodeBase64(
+            List<Map<String, String>> dongleIdsAndValues = decodeBase64List(
                 base64Strings
             );
 
@@ -116,7 +114,9 @@ public class IoDongleByFile {
         return ioWikiModel.orElse(null);
     }
 
-    private List<Map<String, String>> decodeBase64(List<String> base64Strings) {
+    private List<Map<String, String>> decodeBase64List(
+        List<String> base64Strings
+    ) {
         List<String> decodedList = new ArrayList<>();
 
         for (String base64String : base64Strings) {

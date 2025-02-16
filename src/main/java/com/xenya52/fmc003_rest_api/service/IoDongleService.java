@@ -61,13 +61,9 @@ public class IoDongleService {
         List<GetResponseDto> ioDongleDtoList = new ArrayList<>();
 
         for (IoDongleModel ioDongleModel : ioDongleModelList) {
-            Map<String, String> links = Map.of(
-                "prev",
-                getNextId(ioDongleModel.getDeviceId()),
-                "next",
-                getNextId(ioDongleModel.getDeviceId())
-            );
-            ioDongleDtoList.add(new GetResponseDto(ioDongleModel, links));
+            // Next and Previous id are unnecessary if I get the whole list. Furthermore it saves time
+            // Todo: Idk... is "null" bad practice? In this case?
+            ioDongleDtoList.add(new GetResponseDto(ioDongleModel, null));
         }
         return ioDongleDtoList;
     }

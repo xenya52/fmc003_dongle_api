@@ -8,7 +8,11 @@ RUN mvn clean install -Dmaven.test.skip=true
 
 FROM eclipse-temurin:22-alpine
 WORKDIR /service
+
 COPY --from=0 /service/target/fmc003_rest-api-0.0.1-SNAPSHOT.jar /app.jar
+COPY --from=0 /service/src/main/resources/teltonikaDongleDataDumby.txt /service/src/main/resources/teltonikaDongleDataDumby.txt
+COPY --from=0 /service/src/main/resources/teltonikaIdAndName.txt /service/src/main/resources/teltonikaIdAndName.txt
+
 ENTRYPOINT ["java","-jar","/app.jar"]
 
 EXPOSE 8080

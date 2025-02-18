@@ -1,6 +1,7 @@
 package com.xenya52.fmc003_rest_api.controller.v1;
 
 import com.xenya52.fmc003_rest_api.entity.dto.GetResponseDto;
+import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
 import com.xenya52.fmc003_rest_api.service.IoWikiByFile;
 import com.xenya52.fmc003_rest_api.service.IoWikiService;
 import java.util.ArrayList;
@@ -23,12 +24,14 @@ public class IoWikiController {
     @Autowired
     private IoWikiService ioWikiService;
 
+    @Autowired
+    private IoWikiByFile ioWikiFile;
+
     // Methods
     // Todo make a own mongoService for this without that restapi
-    /**
     @GetMapping("/fetch-file")
     public ResponseEntity<String> debug() {
-        List<IoWikiModel> idsAndNames = ioWiki.getIdsAndNames();
+        List<IoWikiModel> idsAndNames = ioWikiFile.getIdsAndNames();
         if (idsAndNames == null) {
             return new ResponseEntity<>(
                 "Error",
@@ -39,7 +42,7 @@ public class IoWikiController {
         ioWikiService.saveIoWikiList(idsAndNames);
         return new ResponseEntity<>("Debug", HttpStatus.OK);
     }
-    */
+
     // Todo fix the buggy indexes
     @GetMapping("/items/all")
     public ResponseEntity<List<GetResponseDto>> ioWikiAll() {

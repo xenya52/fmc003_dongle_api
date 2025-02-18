@@ -30,7 +30,7 @@
 		<url />
 	</scm>
 	<properties>
-		<java.version>21</java.version>
+		<java.version>22</java.version>
 	</properties>
 	<dependencies>
 	    <!-- Use this to avoid boilerplate code that typlically appears while oop -->

@@ -63,12 +63,8 @@ The ```IoDongleModel``` class is a Java model representing a device. It includes
   - ```deviceId```: A long value representing the Device ID.
   - ```ioWikiModelList```: A list of IoWikiModel objects.
 
-- **Methods**:
-  - ```toJson()```: Converts the IoDongleModel object to a JSON string.
-  - ```parseDongleJsonToIoWikiModelList(String json)```: Parses a JSON string to populate the ioWikiModelList.
 
-
-The ```IoWikiModel``` class is a Java model representing a wiki entry. It includes the following:
+The ```IoWikiModel``` class is a Java model representing a wiki entry from the left Site to explain the id that you get. It includes the following:
 
 - **Attributes**:
   - ```wikiId```: A string representing the Wiki ID.
@@ -79,9 +75,6 @@ The ```IoWikiModel``` class is a Java model representing a wiki entry. It includ
   - ```valMin```: A string representing the minimum value.
   - ```valMax```: A string representing the maximum value.
   - ```unit```: A string representing the unit.
-
-- **Methods**:
-  - ```toJson()```: Converts the IoWikiModel object to a JSON string.
 
 - **Constructors**:
   - Multiple constructors allow initializing the object with various combinations of attributes.
@@ -105,10 +98,10 @@ The controller package manages HTTP requests and responses, handling the incomin
 ### Endpoints
 The application exposes various REST API endpoints to interact with the data. Below is a brief overview of the available endpoints:
 
-- ```GET /api/data``` - Retrieve all data
-- ```POST /api/data``` - Create new data
-- ```PUT /api/data/{id}``` - Update existing data
-- ```DELETE /api/data/{id}``` - Delete data by ID
+- ```GET /v1/dongle/items/{listOfIds}``` - Retrieve all data
+- ```GET /v1/dongle/items/all``` - Create new data
+- ```GET /v1/io-wiki/items/{listOfIds}``` - Update existing data
+- ```GET /v1/io-wiki/items/all``` - Delete data by ID
 
 Technologies Used
 ---------
@@ -123,6 +116,11 @@ Contributing
 
 Contributions are welcome! Please follow the standard GitHub flow for contributing:
 
+1. Fork the repository
+2. Create a new branch (```git checkout -b feature/YourFeature```)
+3. Commit your changes (```git commit -m "Add some feature"```)
+4. Push to the branch (```git push origin feature/YourFeature```)
+5. Open a pull request
 1. Fork the repository
 2. Create a new branch (```git checkout -b feature/YourFeature```)
 3. Commit your changes (```git commit -m "Add some feature"```)

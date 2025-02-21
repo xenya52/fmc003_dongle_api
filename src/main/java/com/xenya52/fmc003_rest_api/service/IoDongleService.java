@@ -25,6 +25,7 @@ public class IoDongleService {
     public IoDongleService() {}
 
     // Methods
+    // TODO: Rethink you way of exception handling, you can do this better
     public GetResponseDto getIoDongleById(String id) {
         try {
             IoDongleModel dongleModel = ioDongleRepository

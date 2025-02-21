@@ -1,5 +1,4 @@
-// Exmaple of .env file
-
+# Exmaple of .env file
 MONGODB_DATABASE=teltonikaDB
 MONGODB_PORT=27017
 MONGODB_HOST=localhost

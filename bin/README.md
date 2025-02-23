@@ -102,9 +102,6 @@ The application exposes various REST API endpoints to interact with the data. Be
 - ```GET /v1/dongle/items/all``` - Create new data
 - ```GET /v1/io-wiki/items/{listOfIds}``` - Update existing data
 - ```GET /v1/io-wiki/items/all``` - Delete data by ID
-- ```GET /v2/io-wiki/items/all``` - Delete data by ID
-- ```GET /v2/io-wiki/fetch-from-teltonikaIoWiki-into-db``` - TODO
-- ```GET /v2/io-wiki/fetch-local-file-into-db``` - TODO
 
 Technologies Used
 ---------

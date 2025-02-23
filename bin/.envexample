@@ -1,0 +1,6 @@
+# Exmaple of .env file
+MONGODB_DATABASE=teltonikaDB
+MONGODB_PORT=27017
+MONGODB_HOST=localhost
+MONGODB_USERNAME=youser
+MONGODB_PASSWORD=example

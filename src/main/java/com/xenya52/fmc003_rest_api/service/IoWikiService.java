@@ -81,6 +81,10 @@ public class IoWikiService {
         return ioWikiDtoList;
     }
 
+    public List<IoWikiModel> fetchFromTeltonikaIoWiki() {
+        return null;
+    }
+
     public boolean saveIoWikiList(List<IoWikiModel> ioWikiList) {
         try {
             for (IoWikiModel ioWikiModel : ioWikiList) {

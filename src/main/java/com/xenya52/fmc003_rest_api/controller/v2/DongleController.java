@@ -1,4 +1,4 @@
-package com.xenya52.fmc003_rest_api.controller.v1;
+package com.xenya52.fmc003_rest_api.controller.v2;
 
 import com.xenya52.fmc003_rest_api.entity.dto.GetResponseDto;
 import com.xenya52.fmc003_rest_api.entity.model.IoDongleModel;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1/dongle")
-@ConditionalOnProperty(name = "controller.version", havingValue = "v1")
+@ConditionalOnProperty(name = "controller.version", havingValue = "v2")
 public class DongleController {
 
     // Attributes
@@ -47,8 +47,8 @@ public class DongleController {
 
     // Methods
     // Todo make a own mongoService for this without that restapi
-    /*
-    @GetMapping("/fetch-file")
+    // Todo make an optional param to fetch the file from a specific path
+    @GetMapping("/fetch-local-file-into-db")
     public ResponseEntity<String> fetchFile() {
         try {
             List<IoDongleModel> dongleList = dongleByFile.getDongleList();
@@ -70,7 +70,6 @@ public class DongleController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    */
 
     @GetMapping("/items/all")
     public ResponseEntity<List<GetResponseDto>> dongleAll() {

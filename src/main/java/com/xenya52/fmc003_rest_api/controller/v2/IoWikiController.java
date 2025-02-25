@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -30,16 +31,28 @@ public class IoWikiController {
     private IoWikiByFile fileIoWikis;
 
     // Methods
-    // Todo: Implement a optional fil that you can give to the function. It'll process it like the default file, write a description to make this clear
     @GetMapping("/fetch-local-file-into-db")
-    public ResponseEntity<String> debug() {
-        List<IoWikiModel> idsAndNames = fileIoWikis.getIdsAndNames();
+    public ResponseEntity<String> debug(
+        @RequestParam(value = "filePath", required = false) String filePath
+    ) {
+        List<IoWikiModel> idsAndNames;
+        if (filePath != null && !filePath.isEmpty()) {
+            //idsAndNames = fileIoWikis.getIdsAndNamesFromFile(filePath);
+            // TODO: Implement logic to fetch IDs and names from the provided file path
+            idsAndNames = new ArrayList<>();
+        } else {
+            idsAndNames = fileIoWikis.getIdsAndNames();
+        }
+
         if (idsAndNames == null) {
             return new ResponseEntity<>("Error", HttpStatus.NOT_FOUND);
         }
+
         ioWikiService.saveIoWikiList(idsAndNames);
-        // Todo change debug
-        return new ResponseEntity<>("Debug", HttpStatus.OK);
+        return new ResponseEntity<>(
+            "File processed successfully",
+            HttpStatus.OK
+        );
     }
 
     @GetMapping("/fetch-from-teltonikaIoWiki-into-db")

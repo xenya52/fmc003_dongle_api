@@ -28,7 +28,6 @@ public class DongleController {
     private IoDongleByFile dongleByFile;
 
     // Methods
-
     @GetMapping("/items/{listOfIds}")
     public ResponseEntity<List<GetResponseDto>> dongleById(
         @PathVariable List<String> listOfIds
@@ -74,13 +73,9 @@ public class DongleController {
     @GetMapping("/items/all")
     public ResponseEntity<List<GetResponseDto>> dongleAll() {
         List<GetResponseDto> response = dongleService.getIoDongleList();
-        // Todo
-        // Implement edge cases, at the moment Im getting a error if i try to index the first element of a empty list
-        /**
-        if (response.getFirst()== null) {
+        if (response.getFirst() == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        */
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

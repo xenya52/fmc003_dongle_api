@@ -37,7 +37,7 @@ public class IoWikiController {
     ) {
         List<IoWikiModel> idsAndNames;
         if (filePath != null && !filePath.isEmpty()) {
-            //idsAndNames = fileIoWikis.getIdsAndNamesFromFile(filePath);
+            // idsAndNames = fileIoWikis.getIdsAndNamesFromFile(filePath);
             // TODO: Implement logic to fetch IDs and names from the provided file path
             idsAndNames = new ArrayList<>();
         } else {
@@ -67,17 +67,12 @@ public class IoWikiController {
         return new ResponseEntity<>("Debug", HttpStatus.OK);
     }
 
-    // Todo fix the buggy indexes
     @GetMapping("/items/all")
     public ResponseEntity<List<GetResponseDto>> ioWikiAll() {
         List<GetResponseDto> response = ioWikiService.getIoWikiList();
-        // Todo
-        // Implement edge cases, at the moment Im getting a error if i try to index the first element of a empty list
-        /**
         if (response.getFirst() == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        */
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

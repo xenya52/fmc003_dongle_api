@@ -2,7 +2,6 @@ package com.xenya52.fmc003_rest_api.service;
 
 import com.xenya52.fmc003_rest_api.entity.dto.GetResponseDto;
 import com.xenya52.fmc003_rest_api.entity.model.IoDongleModel;
-import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
 import com.xenya52.fmc003_rest_api.repository.IoDongleRepository;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -25,8 +24,44 @@ public class IoDongleService {
     public IoDongleService() {}
 
     // Methods
+
+    // Todo implement edge cases for saveIoDongleList
+    public boolean saveIoDongleList(List<IoDongleModel> ioDongleModels) {
+        for (IoDongleModel ioDongleModel : ioDongleModels) {
+            saveIoDongle(ioDongleModel);
+        }
+        return true;
+    }
+
+    public List<GetResponseDto> getIoDongleList() {
+        List<IoDongleModel> ioDongleModelList = ioDongleRepository.findAll();
+        List<GetResponseDto> ioDongleDtoList = new ArrayList<>();
+
+        for (IoDongleModel ioDongleModel : ioDongleModelList) {
+            // Next and Previous id are unnecessary if I get the whole list. Furthermore it saves time
+            // Todo: Idk... is "null" bad practice? In this case?
+            ioDongleDtoList.add(new GetResponseDto(ioDongleModel, null));
+        }
+        return ioDongleDtoList;
+    }
+
+    public List<GetResponseDto> getIoDongleListBySpecificId(List<String> ids) {
+        List<GetResponseDto> responseDtos = new ArrayList<>();
+
+        for (String id : ids) {
+            GetResponseDto getResponseDto = getIoDongleById(id);
+
+            if (getResponseDto == null) {
+                // TODO
+            } else {
+                responseDtos.add(getResponseDto);
+            }
+        }
+        return responseDtos;
+    }
+
     // TODO: Rethink you way of exception handling, you can do this better
-    public GetResponseDto getIoDongleById(String id) {
+    private GetResponseDto getIoDongleById(String id) {
         try {
             IoDongleModel dongleModel = ioDongleRepository
                 .findByDeviceId(id)
@@ -51,10 +86,11 @@ public class IoDongleService {
         }
     }
 
-    // Todo implement edge cases for saveIoDongle
-    public void saveIoDongle(IoDongleModel ioDongleModel) {
+    // Todo rethink edge cases for saveIoDongleList
+    private boolean saveIoDongle(IoDongleModel ioDongleModel) {
         try {
             ioDongleRepository.save(ioDongleModel);
+            return true;
         } catch (IllegalArgumentException iae) {
             throw new IllegalArgumentException(
                 "IllegalArgumentException: The given IoDongleModel is not valid."
@@ -64,18 +100,6 @@ public class IoDongleService {
                 "OptimisticLockingFailureException: The given IoDongleModel has already changed his state in the database."
             );
         }
-    }
-
-    public List<GetResponseDto> getIoDongleList() {
-        List<IoDongleModel> ioDongleModelList = ioDongleRepository.findAll();
-        List<GetResponseDto> ioDongleDtoList = new ArrayList<>();
-
-        for (IoDongleModel ioDongleModel : ioDongleModelList) {
-            // Next and Previous id are unnecessary if I get the whole list. Furthermore it saves time
-            // Todo: Idk... is "null" bad practice? In this case?
-            ioDongleDtoList.add(new GetResponseDto(ioDongleModel, null));
-        }
-        return ioDongleDtoList;
     }
 
     private String getPrevId(String id) {

@@ -60,12 +60,9 @@ public class IoWikiController {
     public ResponseEntity<List<GetResponseDto>> ioWikiList(
         @PathVariable List<String> listOfIds
     ) {
-        List<GetResponseDto> responseList = new ArrayList<>();
-
-        for (String id : listOfIds) {
-            GetResponseDto response = ioWikiService.getIoWikiById(id);
-            responseList.add(response);
-        }
+        List<GetResponseDto> responseList = ioWikiService.getIoWikiListById(
+            listOfIds
+        );
 
         if (responseList.getFirst() == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

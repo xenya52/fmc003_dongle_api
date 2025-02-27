@@ -13,6 +13,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Scanner;
 import lombok.extern.slf4j.Slf4j;
@@ -29,23 +30,33 @@ public class IoDongleByFile {
     @Autowired
     IoWikiRepository ioWikiRepository;
 
+    // Default file path
+    String defaultFilePath = "src/main/resources/teltonikaDongleDataDumby.txt";
+
     // Constructors
     public IoDongleByFile() {
-        this.dongelModel = fetchDongleModel();
+        this.dongelModel = fetchDongleModel(defaultFilePath);
     }
 
     // Methods
-    public List<IoDongleModel> getDongleList() {
+    public List<IoDongleModel> getDefaultDongleList() {
         return dongelModel;
     }
 
-    private List<IoDongleModel> fetchDongleModel() {
-        String filePath = "src/main/resources/teltonikaDongleDataDumby.txt";
+    public List<IoDongleModel> getDongleListByFile(String filePath) {
+        this.dongelModel = fetchDongleModel(filePath);
+        return dongelModel;
+    }
+
+    private List<IoDongleModel> fetchDongleModel(String filePath) {
+        String tempFilePath = filePath == null || !filePath.isEmpty()
+            ? defaultFilePath
+            : filePath;
 
         List<IoDongleModel> dongleList = new ArrayList<>();
 
         try {
-            File file = new File(filePath);
+            File file = new File(tempFilePath);
             Scanner scanner = new Scanner(file);
             StringBuilder jsonStringBuilder = new StringBuilder();
 
@@ -66,10 +77,12 @@ public class IoDongleByFile {
             }
             scanner.close();
         } catch (FileNotFoundException e) {
+            // Debug
+            System.out.println("Error: " + e.getMessage());
+
             e.printStackTrace();
-        } finally {
-            return dongleList;
         }
+        return dongleList;
     }
 
     private static List<String> parseJsonBody(String jsonString) {

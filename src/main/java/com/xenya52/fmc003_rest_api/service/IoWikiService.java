@@ -24,7 +24,22 @@ public class IoWikiService {
     public IoWikiService() {}
 
     // Methods
-    public GetResponseDto getIoWikiById(String id) {
+    public List<GetResponseDto> getIoWikiListById(List<String> ids) {
+        List<GetResponseDto> getResponseDtos = new ArrayList<>();
+
+        for (String id : ids) {
+            GetResponseDto getResponseDto = getIoWikiById(id);
+
+            if (getResponseDto == null) {
+                // TODO
+            } else {
+                getResponseDtos.add(getResponseDto);
+            }
+        }
+        return getResponseDtos;
+    }
+
+    private GetResponseDto getIoWikiById(String id) {
         IoWikiModel wikiModel = ioWikiRepository.findByWikiId(id).orElse(null);
         try {
             Map<String, String> links = Map.of(

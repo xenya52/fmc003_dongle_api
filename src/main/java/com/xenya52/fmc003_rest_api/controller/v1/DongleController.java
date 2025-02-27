@@ -33,12 +33,9 @@ public class DongleController {
     public ResponseEntity<List<GetResponseDto>> dongleById(
         @PathVariable List<String> listOfIds
     ) {
-        List<GetResponseDto> responseList = new ArrayList<>();
+        List<GetResponseDto> responseList =
+            dongleService.getIoDongleListBySpecificId(listOfIds);
 
-        for (String id : listOfIds) {
-            GetResponseDto response = dongleService.getIoDongleById(id);
-            responseList.add(response);
-        }
         if (responseList.getFirst() == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

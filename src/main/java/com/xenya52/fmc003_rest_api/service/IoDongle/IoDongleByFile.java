@@ -1,10 +1,9 @@
-package com.xenya52.fmc003_rest_api.service;
+package com.xenya52.fmc003_rest_api.service.IoDongle;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xenya52.fmc003_rest_api.entity.model.IoDongleModel;
-import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
 import com.xenya52.fmc003_rest_api.repository.IoWikiRepository;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,81 +12,30 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.Scanner;
-import lombok.extern.slf4j.Slf4j;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
 public class IoDongleByFile {
 
     // Attributes
-    private List<IoDongleModel> dongelModel;
-
     @Autowired
     IoWikiRepository ioWikiRepository;
 
-    // Default file path
-    String defaultFilePath = "src/main/resources/teltonikaDongleDataDumby.txt";
+    // Default file path TODO make this configurable OR a generator for dumb data
+    final String defaultFilePath =
+        "src/main/resources/teltonikaDongleDataDumby.txt";
 
-    // Constructors
-    public IoDongleByFile() {
-        this.dongelModel = fetchDongleModel(defaultFilePath);
-    }
+    private static final Logger LOGGER = Logger.getLogger(
+        IoDongleByFile.class.getName()
+    );
 
     // Methods
-    public List<IoDongleModel> getDefaultDongleList() {
-        return dongelModel;
-    }
-
-    public List<IoDongleModel> getDongleListByFile(String filePath) {
-        this.dongelModel = fetchDongleModel(filePath);
-        return dongelModel;
-    }
-
-    private List<IoDongleModel> fetchDongleModel(String filePath) {
-        String tempFilePath = filePath == null || !filePath.isEmpty()
-            ? defaultFilePath
-            : filePath;
-
-        List<IoDongleModel> dongleList = new ArrayList<>();
-
-        try {
-            File file = new File(tempFilePath);
-            Scanner scanner = new Scanner(file);
-            StringBuilder jsonStringBuilder = new StringBuilder();
-
-            while (scanner.hasNextLine()) {
-                jsonStringBuilder.append(scanner.nextLine());
-            }
-            String jsonString = jsonStringBuilder.toString();
-
-            List<String> base64Strings = parseJsonBody(jsonString);
-
-            List<Map<String, String>> dongleIdsAndValues = decodeBase64List(
-                base64Strings
-            );
-
-            for (Map<String, String> dongleIdAndValue : dongleIdsAndValues) {
-                IoDongleModel dongleModel = new IoDongleModel(dongleIdAndValue);
-                dongleList.add(dongleModel);
-            }
-            scanner.close();
-        } catch (FileNotFoundException e) {
-            // Debug
-            System.out.println("Error: " + e.getMessage());
-
-            e.printStackTrace();
-        }
-        return dongleList;
-    }
-
     private static List<String> parseJsonBody(String jsonString) {
         List<String> base64Strings = new ArrayList<>();
-        // Parse the JSON string
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             @SuppressWarnings("unchecked")
@@ -100,25 +48,19 @@ public class IoDongleByFile {
                     Map<String, String>
                 >) jsonObject.get("data");
 
-            // Iterate through each JSON object in the array
             for (Map<String, String> dataObject : dataArray) {
                 String base64String = dataObject.get("Body");
-
-                // Add the base64 string to the list
                 base64Strings.add(base64String);
             }
-        } catch (Exception e) {
-            // Debug
-            System.out.println("Error: " + e.getMessage());
-
-            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            LOGGER.log(
+                Level.SEVERE,
+                "Error processing JSON: {0}",
+                e.getMessage()
+            );
+            throw new RuntimeException("Error processing JSON", e);
         }
         return base64Strings;
-    }
-
-    private IoWikiModel getIowikiModelById(String id) {
-        Optional<IoWikiModel> ioWikiModel = ioWikiRepository.findById(id);
-        return ioWikiModel.orElse(null);
     }
 
     private List<Map<String, String>> decodeBase64List(
@@ -133,11 +75,12 @@ public class IoDongleByFile {
                 String decodedString = new String(decodedBytes);
                 decodedList.add(decodedString);
             } catch (IllegalArgumentException e) {
-                // Todo - Handle exception better
-                System.out.println(
-                    "Error decoding Base64 string: " + e.getMessage()
+                LOGGER.log(
+                    Level.SEVERE,
+                    "Error decoding Base64 string: {0}",
+                    e.getMessage()
                 );
-                e.printStackTrace();
+                throw new RuntimeException("Error decoding Base64 string", e);
             }
         }
 
@@ -151,14 +94,15 @@ public class IoDongleByFile {
                     new TypeReference<Map<String, Object>>() {}
                 );
 
-                // Todo fix Java: Type safety: Unchecked cast from Object to Map<String,Object>
                 Map<String, String> dongleIdAndValue = new HashMap<>();
                 if (decodedMap.containsKey("state")) {
+                    @SuppressWarnings("unchecked")
                     Map<String, Object> stateMap = (Map<
                             String,
                             Object
                         >) decodedMap.get("state");
                     if (stateMap.containsKey("reported")) {
+                        @SuppressWarnings("unchecked")
                         Map<String, Object> reportedMap = (Map<
                                 String,
                                 Object
@@ -176,13 +120,43 @@ public class IoDongleByFile {
                 }
                 dongleIdsAndValues.add(dongleIdAndValue);
             } catch (JsonProcessingException e) {
-                // Todo - Handle exception better
-                System.out.println(
-                    "Error parsing JSON string: " + e.getMessage()
+                LOGGER.log(
+                    Level.SEVERE,
+                    "Error parsing JSON string: {0}",
+                    e.getMessage()
                 );
-                e.printStackTrace();
+                throw new RuntimeException("Error parsing JSON string", e);
             }
         }
         return dongleIdsAndValues;
+    }
+
+    public List<IoDongleModel> dongleModelsByFile() {
+        List<IoDongleModel> dongleList = new ArrayList<>();
+        File file = new File(defaultFilePath);
+
+        try (Scanner scanner = new Scanner(file)) {
+            StringBuilder jsonStringBuilder = new StringBuilder();
+
+            while (scanner.hasNextLine()) {
+                jsonStringBuilder.append(scanner.nextLine());
+            }
+            String jsonString = jsonStringBuilder.toString();
+
+            List<String> base64Strings = parseJsonBody(jsonString);
+
+            List<Map<String, String>> dongleIdsAndValues = decodeBase64List(
+                base64Strings
+            );
+
+            for (Map<String, String> dongleIdAndValue : dongleIdsAndValues) {
+                IoDongleModel dongleModel = new IoDongleModel(dongleIdAndValue);
+                dongleList.add(dongleModel);
+            }
+        } catch (FileNotFoundException e) {
+            LOGGER.log(Level.SEVERE, "File not found: {0}", e.getMessage());
+            throw new RuntimeException("File not found", e);
+        }
+        return dongleList;
     }
 }

@@ -1,4 +1,4 @@
-package com.xenya52.fmc003_rest_api.service;
+package com.xenya52.fmc003_rest_api.service.IoDongle;
 
 import com.xenya52.fmc003_rest_api.entity.dto.GetResponseDto;
 import com.xenya52.fmc003_rest_api.entity.model.IoDongleModel;
@@ -7,14 +7,18 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import lombok.extern.slf4j.Slf4j;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
 public class IoDongleService {
+
+    private static final Logger LOGGER = Logger.getLogger(
+        IoDongleService.class.getName()
+    );
 
     // Attributes
     @Autowired
@@ -39,7 +43,6 @@ public class IoDongleService {
 
         for (IoDongleModel ioDongleModel : ioDongleModelList) {
             // Next and Previous id are unnecessary if I get the whole list. Furthermore it saves time
-            // Todo: Idk... is "null" bad practice? In this case?
             ioDongleDtoList.add(new GetResponseDto(ioDongleModel, null));
         }
         return ioDongleDtoList;
@@ -52,7 +55,7 @@ public class IoDongleService {
             GetResponseDto getResponseDto = getIoDongleById(id);
 
             if (getResponseDto == null) {
-                // TODO
+                LOGGER.log(Level.WARNING, "IoDongle with id {0} not found", id);
             } else {
                 responseDtos.add(getResponseDto);
             }
@@ -60,7 +63,6 @@ public class IoDongleService {
         return responseDtos;
     }
 
-    // TODO: Rethink you way of exception handling, you can do this better
     private GetResponseDto getIoDongleById(String id) {
         try {
             IoDongleModel dongleModel = ioDongleRepository
@@ -76,28 +78,51 @@ public class IoDongleService {
                 ? null
                 : new GetResponseDto(dongleModel, links);
         } catch (IllegalArgumentException iae) {
+            LOGGER.log(
+                Level.SEVERE,
+                "Invalid id provided: {0}",
+                iae.getMessage()
+            );
             throw new IllegalArgumentException(
-                "IllegalArgumentException: The id is not valid. Please provide a valid id."
+                "The id is not valid. Please provide a valid id.",
+                iae
             );
         } catch (NullPointerException npe) {
-            throw new NullPointerException(
-                "NullPointerException: The id is not valid. Please provide a valid id."
+            LOGGER.log(
+                Level.SEVERE,
+                "NullPointerException for id: {0}",
+                npe.getMessage()
+            );
+            throw new IllegalArgumentException(
+                "The id is not valid. Please provide a valid id.",
+                npe
             );
         }
     }
 
-    // Todo rethink edge cases for saveIoDongleList
     private boolean saveIoDongle(IoDongleModel ioDongleModel) {
         try {
             ioDongleRepository.save(ioDongleModel);
             return true;
         } catch (IllegalArgumentException iae) {
-            throw new IllegalArgumentException(
-                "IllegalArgumentException: The given IoDongleModel is not valid."
+            LOGGER.log(
+                Level.SEVERE,
+                "Invalid IoDongleModel provided: {0}",
+                iae.getMessage()
             );
-        } catch (OptimisticLockingFailureException npe) {
+            throw new IllegalArgumentException(
+                "The given IoDongleModel is not valid.",
+                iae
+            );
+        } catch (OptimisticLockingFailureException olfe) {
+            LOGGER.log(
+                Level.SEVERE,
+                "Optimistic locking failure for IoDongleModel: {0}",
+                olfe.getMessage()
+            );
             throw new OptimisticLockingFailureException(
-                "OptimisticLockingFailureException: The given IoDongleModel has already changed his state in the database."
+                "The given IoDongleModel has already changed its state in the database.",
+                olfe
             );
         }
     }
@@ -123,8 +148,14 @@ public class IoDongleService {
                 return ioDongleModelList.get(index - 1).getDeviceId();
             }
         } catch (NullPointerException npe) {
-            throw new NullPointerException(
-                "NullPointerException: The id is not valid. Please provide a valid id."
+            LOGGER.log(
+                Level.SEVERE,
+                "NullPointerException while getting previous id for: {0}",
+                npe.getMessage()
+            );
+            throw new IllegalArgumentException(
+                "The id is not valid. Please provide a valid id.",
+                npe
             );
         }
     }
@@ -148,8 +179,14 @@ public class IoDongleService {
                 return ioDongleModelList.get(index + 1).getDeviceId();
             }
         } catch (NullPointerException npe) {
-            throw new NullPointerException(
-                "NullPointerException: The id is not valid. Please provide a valid id."
+            LOGGER.log(
+                Level.SEVERE,
+                "NullPointerException while getting next id for: {0}",
+                npe.getMessage()
+            );
+            throw new IllegalArgumentException(
+                "The id is not valid. Please provide a valid id.",
+                npe
             );
         }
     }

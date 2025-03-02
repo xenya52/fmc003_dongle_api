@@ -12,24 +12,29 @@ Table of Contents
 ---------
 
 - [Getting Started](Getting-Started)
+- [Prerequisites](Prerequisites)
+- [Installation](Installation)
 - [Project Structure](Project-Structure)
+- [Model](Model)
+- [Service](Service)
+- [Controller](Controller)
 - [Endpoints](Endpoints)
 - [Technologies Used](Technologies-Used)
 - [Contributing](Contributing)
-- [License](License)
-- [Contact](Contact)
 
 Getting Started
 ---------
 
 To get a local copy of the project up and running, follow these steps.
 
-### Prerequisites
+Prerequisites
+---------
 
 - Java 11 or higher
 - Docker (optional for containerization)
 
-### Installation
+Installation
+---------
 
 1. Clone the repository:
 ``` bash
@@ -53,7 +58,8 @@ Project Structure
 
 The project is divided into multiple layers to follow best practices and ensure the separation of concerns.
 
-### Model
+Model
+---------
 
 The model package contains the classes that represent the data of the application.
 
@@ -88,23 +94,43 @@ For more details, you can view the [file](https://github.com/xenya52/fmc003_rest
 
 
 
-### Service
+Service
+---------
 
 The service package is responsible for implementing the business logic of the application. It acts as an intermediary between the controller and the repository layers.
 
-### Controller
+Controller
+---------
+
 The controller package manages HTTP requests and responses, handling the incoming API calls.
 
-### Endpoints
+Endpoints
+---------
+
 The application exposes various REST API endpoints to interact with the data. Below is a brief overview of the available endpoints:
 
-- ```GET /v1/dongle/items/{listOfIds}``` - Retrieve all data
-- ```GET /v1/dongle/items/all``` - Create new data
-- ```GET /v1/io-wiki/items/{listOfIds}``` - Update existing data
-- ```GET /v1/io-wiki/items/all``` - Delete data by ID
-- ```GET /v2/io-wiki/items/all``` - Delete data by ID
-- ```GET /v2/io-wiki/fetch-from-teltonikaIoWiki-into-db``` - TODO
-- ```GET /v2/io-wiki/fetch-local-file-into-db``` - TODO
+### IoWiki Endpoints
+
+#### v1
+- ```GET /v1/io-wiki/items/{listOfIds}``` - Show IoWikimodels from valid id reverences in the DB
+- ```GET /v1/io-wiki/items/all``` - Show all IoWikiModels in the DB
+
+#### v2
+- ```GET /v2/io-wiki/items/{listOfIds}``` - Show IoWikimodels from valid id reverences in the DB
+- ```GET /v2/io-wiki/items/all``` - Show all IoWikiModels in the DB
+- ```GET /v2/io-wiki/fetch-default-values-into-db``` - Fetches the presaved values, from a file, into the MongoDB
+- ```GET /v2/io-wiki/fetch-from-teltonikaIoWiki-into-db``` - Scrapes the data from the teltonikaIoWiki and saves it into the MongoDB
+
+### IoDongle Endpoints
+
+#### v1
+- ```GET /v1/dongle/items/{listOfIds}``` - Show IoDongleModels from valid id reverences in the DB
+- ```GET /v1/dongle/items/all``` - Show all IoDongleModels in the DB
+
+#### v2
+- ```GET /v2/dongle/items/{listOfIds}``` - Show IoDongleModels from valid id reverences in the DB
+- ```GET /v2/dongle/items/all``` - Show all IoDongleModels in the DB
+- ```GET /v2/dongle/fetch-default-values-into-db``` - Fetches the presaved values, from a file, into the MongoDB
 
 Technologies Used
 ---------

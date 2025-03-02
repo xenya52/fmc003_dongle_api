@@ -1,4 +1,4 @@
-package com.xenya52.fmc003_rest_api.service;
+package com.xenya52.fmc003_rest_api.service.IoWiki;
 
 import com.xenya52.fmc003_rest_api.entity.dto.GetResponseDto;
 import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
@@ -7,21 +7,29 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import lombok.extern.slf4j.Slf4j;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
 public class IoWikiService {
+
+    private static final Logger LOGGER = Logger.getLogger(
+        IoWikiService.class.getName()
+    );
 
     // Attributes
     @Autowired
     private IoWikiRepository ioWikiRepository;
 
+    private ScrapeTeltonikaIoWiki scrapeTeltonikaIoWiki;
+
     // Constructors
-    public IoWikiService() {}
+    public IoWikiService() {
+        this.scrapeTeltonikaIoWiki = new ScrapeTeltonikaIoWiki(); // TODO try to autowire
+    }
 
     // Methods
     public List<GetResponseDto> getIoWikiListById(List<String> ids) {
@@ -52,12 +60,24 @@ public class IoWikiService {
                 ? null
                 : new GetResponseDto(wikiModel, links);
         } catch (IllegalArgumentException iae) {
+            LOGGER.log(
+                Level.SEVERE,
+                "IllegalArgumentException: The id is not valid. Please provide a valid id: {0}",
+                iae.getMessage()
+            );
             throw new IllegalArgumentException(
-                "IllegalArgumentException: The id is not valid. Please provide a valid id."
+                "The id is not valid. Please provide a valid id.",
+                iae
             );
         } catch (NullPointerException npe) {
-            throw new NullPointerException(
-                "NullPointerException: The id is not valid. Please provide a valid id."
+            LOGGER.log(
+                Level.SEVERE,
+                "NullPointerException: The id is not valid. Please provide a valid id: {0}",
+                npe.getMessage()
+            );
+            throw new IllegalArgumentException(
+                "The id is not valid. Please provide a valid id.",
+                npe
             );
         }
     }
@@ -85,19 +105,32 @@ public class IoWikiService {
                 ioWikiDtoList.add(new GetResponseDto(ioWikiModel, null));
             }
         } catch (IllegalArgumentException iae) {
+            LOGGER.log(
+                Level.SEVERE,
+                "IllegalArgumentException: The id is not valid. Please provide a valid id: {0}",
+                iae.getMessage()
+            );
             throw new IllegalArgumentException(
-                "IllegalArgumentException: The id is not valid. Please provide a valid id."
+                "The id is not valid. Please provide a valid id.",
+                iae
             );
         } catch (NullPointerException npe) {
-            throw new NullPointerException(
-                "NullPointerException: The id is not valid. Please provide a valid id."
+            LOGGER.log(
+                Level.SEVERE,
+                "NullPointerException: The id is not valid. Please provide a valid id: {0}",
+                npe.getMessage()
+            );
+            throw new IllegalArgumentException(
+                "The id is not valid. Please provide a valid id.",
+                npe
             );
         }
         return ioWikiDtoList;
     }
 
     public List<IoWikiModel> fetchFromTeltonikaIoWiki() {
-        return null;
+        // TODO Work the the dataSendingParameters file that is new , before you fetch again from TeltonikaIo
+        // return scrapeTeltonikaIoWiki.getIoWikiListScrapedfromTeltonika();
     }
 
     public boolean saveIoWikiList(List<IoWikiModel> ioWikiList) {
@@ -108,12 +141,24 @@ public class IoWikiService {
                 }
             }
         } catch (IllegalArgumentException iae) {
+            LOGGER.log(
+                Level.SEVERE,
+                "IllegalArgumentException: The id is not valid. Please provide a valid id: {0}",
+                iae.getMessage()
+            );
             throw new IllegalArgumentException(
-                "IllegalArgumentException: The id is not valid. Please provide a valid id."
+                "The id is not valid. Please provide a valid id.",
+                iae
             );
         } catch (NullPointerException npe) {
-            throw new NullPointerException(
-                "NullPointerException: The id is not valid. Please provide a valid id."
+            LOGGER.log(
+                Level.SEVERE,
+                "NullPointerException: The id is not valid. Please provide a valid id: {0}",
+                npe.getMessage()
+            );
+            throw new IllegalArgumentException(
+                "The id is not valid. Please provide a valid id.",
+                npe
             );
         }
         return true;
@@ -124,12 +169,24 @@ public class IoWikiService {
         try {
             ioWikiRepository.save(ioWikiModel);
         } catch (IllegalArgumentException iae) {
-            throw new IllegalArgumentException(
-                "IllegalArgumentException: The given IoDongleModel is not valid."
+            LOGGER.log(
+                Level.SEVERE,
+                "IllegalArgumentException: The given IoDongleModel is not valid: {0}",
+                iae.getMessage()
             );
-        } catch (OptimisticLockingFailureException npe) {
+            throw new IllegalArgumentException(
+                "The given IoDongleModel is not valid.",
+                iae
+            );
+        } catch (OptimisticLockingFailureException olfe) {
+            LOGGER.log(
+                Level.SEVERE,
+                "OptimisticLockingFailureException: The given IoDongleModel has already changed his state in the database: {0}",
+                olfe.getMessage()
+            );
             throw new OptimisticLockingFailureException(
-                "OptimisticLockingFailureException: The given IoDongleModel has already changed his state in the database."
+                "The given IoDongleModel has already changed his state in the database.",
+                olfe
             );
         }
         return true;
@@ -155,8 +212,14 @@ public class IoWikiService {
                 return "";
             }
         } catch (NullPointerException npe) {
-            throw new NullPointerException(
-                "NullPointerException: The id is not valid. Please provide a valid id."
+            LOGGER.log(
+                Level.SEVERE,
+                "NullPointerException: The id is not valid. Please provide a valid id: {0}",
+                npe.getMessage()
+            );
+            throw new IllegalArgumentException(
+                "The id is not valid. Please provide a valid id.",
+                npe
             );
         }
     }
@@ -181,8 +244,14 @@ public class IoWikiService {
                 return "";
             }
         } catch (NullPointerException npe) {
-            throw new NullPointerException(
-                "NullPointerException: The id is not valid. Please provide a valid id."
+            LOGGER.log(
+                Level.SEVERE,
+                "NullPointerException: The id is not valid. Please provide a valid id: {0}",
+                npe.getMessage()
+            );
+            throw new IllegalArgumentException(
+                "The id is not valid. Please provide a valid id.",
+                npe
             );
         }
     }

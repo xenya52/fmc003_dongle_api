@@ -2,9 +2,8 @@ package com.xenya52.fmc003_rest_api.controller.v2;
 
 import com.xenya52.fmc003_rest_api.entity.dto.GetResponseDto;
 import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
-import com.xenya52.fmc003_rest_api.service.IoWikiByFile;
-import com.xenya52.fmc003_rest_api.service.IoWikiService;
-import java.util.ArrayList;
+import com.xenya52.fmc003_rest_api.service.IoWiki.IoWikiByFile;
+import com.xenya52.fmc003_rest_api.service.IoWiki.IoWikiService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -55,18 +53,10 @@ public class IoWikiController {
         return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
 
-    @PostMapping("/fetch-local-file-into-db")
-    public ResponseEntity<String> debug(
-        @RequestParam(value = "filePath", required = false) String filePath
-    ) {
+    @PostMapping("/fetch-default-values-into-db")
+    public ResponseEntity<String> debug() {
         List<IoWikiModel> idsAndNames;
-        if (filePath != null && !filePath.isEmpty()) {
-            // idsAndNames = fileIoWikis.getIdsAndNamesFromFile(filePath);
-            // TODO: Implement logic to fetch IDs and names from the provided file path
-            idsAndNames = new ArrayList<>();
-        } else {
-            idsAndNames = fileIoWikis.getIdsAndNames();
-        }
+        idsAndNames = fileIoWikis.dongleModelsByFile();
 
         if (idsAndNames == null) {
             return new ResponseEntity<>("Error", HttpStatus.NOT_FOUND);

@@ -15,8 +15,6 @@ public class IoDongleModel implements IIo {
 
     private Map<String, String> wikiIdAndDongleValues;
 
-    private Set<IoWikiModel> ioWikiModels = new HashSet<>();
-
     public String getDeviceId() {
         return deviceId;
     }

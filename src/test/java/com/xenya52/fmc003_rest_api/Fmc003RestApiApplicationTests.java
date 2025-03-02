@@ -2,7 +2,7 @@ package com.xenya52.fmc003_rest_api;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.xenya52.fmc003_rest_api.service.IoWikiByFile;
+import com.xenya52.fmc003_rest_api.service.IoWiki.IoWikiByFile;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -12,7 +12,7 @@ class Fmc003RestApiApplicationTests {
     @Test
     public void getTeltonikaIoData() throws Exception {
         IoWikiByFile teltonikaIoData = new IoWikiByFile();
-        teltonikaIoData.getIdsAndNames();
+        teltonikaIoData.dongleModelsByFile();
         assertNotNull(teltonikaIoData);
     }
 }

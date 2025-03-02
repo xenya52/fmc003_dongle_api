@@ -1,9 +1,7 @@
 package com.xenya52.fmc003_rest_api.controller.v1;
 
 import com.xenya52.fmc003_rest_api.entity.dto.GetResponseDto;
-import com.xenya52.fmc003_rest_api.service.IoWikiByFile;
-import com.xenya52.fmc003_rest_api.service.IoWikiService;
-import java.util.ArrayList;
+import com.xenya52.fmc003_rest_api.service.IoWiki.IoWikiService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,33 +24,9 @@ public class IoWikiController {
     private IoWikiService ioWikiService;
 
     // Methods
-    // Todo make a own mongoService for this without that restapi
-    /**
-    @GetMapping("/fetch-file")
-    public ResponseEntity<String> debug() {
-        List<IoWikiModel> idsAndNames = ioWiki.getIdsAndNames();
-        if (idsAndNames == null) {
-            return new ResponseEntity<>(
-                "Error",
-                HttpStatus.INTERNAL_SERVER_ERROR
-            );
-        }
-        System.out.println("idsAndNames" + idsAndNames);
-        ioWikiService.saveIoWikiList(idsAndNames);
-        return new ResponseEntity<>("Debug", HttpStatus.OK);
-    }
-    */
-    // Todo fix the buggy indexes
     @GetMapping("/items/all")
     public ResponseEntity<List<GetResponseDto>> ioWikiAll() {
         List<GetResponseDto> response = ioWikiService.getIoWikiList();
-        // Todo
-        // Implement edge cases, at the moment Im getting a error if i try to index the first element of a empty list
-        /**
-        if (response.getFirst() == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        */
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

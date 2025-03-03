@@ -119,8 +119,7 @@ The application exposes various REST API endpoints to interact with the data. Be
 - ```GET /v2/io-wiki/items/{listOfIds}``` - Show IoWikimodels from valid id reverences in the DB
 - ```GET /v2/io-wiki/items/all``` - Show all IoWikiModels in the DB
 - ```GET /v2/io-wiki/fetch-default-values-into-db``` - Fetches the presaved values, from a file, into the MongoDB
-- ```GET /v2/io-wiki/fetch-from-teltonikaIoWiki-into-db``` - Scrapes the data from the teltonikaIoWiki and saves it into the MongoDB
-
+- ```GET /v2/io-wiki/fetch-advanced-values-into-db``` - Fetches the scraped teltonikaIoPage, from a file, into the MongoDB as IoWikiModels
 ### IoDongle Endpoints
 
 #### v1

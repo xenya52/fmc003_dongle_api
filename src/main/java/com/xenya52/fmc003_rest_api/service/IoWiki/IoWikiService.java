@@ -24,13 +24,6 @@ public class IoWikiService {
     @Autowired
     private IoWikiRepository ioWikiRepository;
 
-    private ScrapeTeltonikaIoWiki scrapeTeltonikaIoWiki;
-
-    // Constructors
-    public IoWikiService() {
-        this.scrapeTeltonikaIoWiki = new ScrapeTeltonikaIoWiki(); // TODO try to autowire
-    }
-
     // Methods
     public List<GetResponseDto> getIoWikiListById(List<String> ids) {
         List<GetResponseDto> getResponseDtos = new ArrayList<>();
@@ -126,11 +119,6 @@ public class IoWikiService {
             );
         }
         return ioWikiDtoList;
-    }
-
-    public List<IoWikiModel> fetchFromTeltonikaIoWiki() {
-        // TODO Work the the dataSendingParameters file that is new , before you fetch again from TeltonikaIo
-        // return scrapeTeltonikaIoWiki.getIoWikiListScrapedfromTeltonika();
     }
 
     public boolean saveIoWikiList(List<IoWikiModel> ioWikiList) {

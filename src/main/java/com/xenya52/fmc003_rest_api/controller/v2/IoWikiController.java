@@ -54,7 +54,7 @@ public class IoWikiController {
     }
 
     @PostMapping("/fetch-default-values-into-db")
-    public ResponseEntity<String> debug() {
+    public ResponseEntity<String> defaultValuesIntoDB() {
         List<IoWikiModel> idsAndNames;
         idsAndNames = fileIoWikis.dongleModelsByFile();
 
@@ -68,15 +68,18 @@ public class IoWikiController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/fetch-from-teltonikaIoWiki-into-db")
-    public ResponseEntity<String> fetchFromTeltonikaIoWiki() {
-        List<IoWikiModel> idsAndNames =
-            ioWikiService.fetchFromTeltonikaIoWiki();
-        if (idsAndNames == null) {
+    @PostMapping("/fetch-advanced-values-into-db")
+    public ResponseEntity<String> advencedValuesIntoDB() {
+        List<IoWikiModel> advancedDongleModels;
+        advancedDongleModels = fileIoWikis.advancedDongleModelsByFile();
+
+        if (advancedDongleModels == null) {
             return new ResponseEntity<>("Error", HttpStatus.NOT_FOUND);
         }
-        System.out.println("idsAndNames" + idsAndNames);
-        ioWikiService.saveIoWikiList(idsAndNames);
-        return new ResponseEntity<>("Debug", HttpStatus.OK);
+
+        if (!ioWikiService.saveIoWikiList(advancedDongleModels)) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

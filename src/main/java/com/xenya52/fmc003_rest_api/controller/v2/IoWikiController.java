@@ -4,6 +4,7 @@ import com.xenya52.fmc003_rest_api.entity.dto.GetResponseDto;
 import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
 import com.xenya52.fmc003_rest_api.service.IoWiki.IoWikiByFile;
 import com.xenya52.fmc003_rest_api.service.IoWiki.IoWikiService;
+import com.xenya52.fmc003_rest_api.service.IoWiki.ScrapeTeltonikaIoWiki;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,13 @@ public class IoWikiController {
 
     @Autowired
     private IoWikiByFile fileIoWikis;
+
+    private ScrapeTeltonikaIoWiki scrapeTeltonikaIoWiki;
+
+    // Constructor
+    public IoWikiController() {
+        this.scrapeTeltonikaIoWiki = new ScrapeTeltonikaIoWiki(); // TODO: Remove this line
+    }
 
     // Methods
     @GetMapping("/items/all")
@@ -79,6 +87,14 @@ public class IoWikiController {
 
         if (!ioWikiService.saveIoWikiList(advancedDongleModels)) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/fetch-teltonika-io-wiki-into-file")
+    public ResponseEntity<String> fetchTeltonikaIoWikiIntoFile() {
+        if (!scrapeTeltonikaIoWiki.fetchTeltonikaIoWikiIntoFile()) {
+            return new ResponseEntity<>("Error", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }

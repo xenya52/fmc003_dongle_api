@@ -27,7 +27,7 @@ public class ScrapeTeltonikaIoWiki {
      * from the Teltonika wiki
      * @return a string containing the data sending parameters
      */
-    private String fetchdataSendingParameters() {
+    private String fetchdataSendingParametersFromTeltonikaIo() {
         try {
             String cssQuiery = "tbody";
             Document doc = Jsoup.connect(
@@ -44,13 +44,9 @@ public class ScrapeTeltonikaIoWiki {
         }
     }
 
-    /***
-     * Returns the data sending parameters
-     * in IoWikiModel format
-     * @return a string containing the data sending parameters in JSON format
-     */
-    public List<IoWikiModel> getIoWikiListScrapedfromTeltonika() {
-        String dataSendingParameters = fetchdataSendingParameters();
+    public boolean fetchTeltonikaIoWikiIntoFile() {
+        String dataSendingParameters =
+            fetchdataSendingParametersFromTeltonikaIo();
         try (
             BufferedWriter writer = new BufferedWriter(
                 new FileWriter("src/main/resources/dataSendingParameters.txt")
@@ -59,60 +55,8 @@ public class ScrapeTeltonikaIoWiki {
             writer.write(dataSendingParameters);
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
-        // Debugging
-        System.out.println(dataSendingParameters);
-
-        List<IoWikiModel> ioWikiResponses = new ArrayList<>();
-
-        try {
-            BufferedReader bufReader = new BufferedReader(
-                new StringReader(dataSendingParameters)
-            );
-            String Line = null;
-
-            while ((Line = bufReader.readLine()) != null) {
-                if (Line.contains("<tr>")) {
-                    String id = bufReader
-                        .readLine()
-                        .split(">")[1].split("<")[0];
-                    String name = bufReader
-                        .readLine()
-                        .split(">")[1].split("<")[0];
-                    String responseType = bufReader
-                        .readLine()
-                        .split(">")[1].split("<")[0];
-                    String minVal = bufReader
-                        .readLine()
-                        .split(">")[1].split("<")[0];
-                    String maxVal = bufReader
-                        .readLine()
-                        .split(">")[1].split("<")[0];
-                    String multiplier = bufReader
-                        .readLine()
-                        .split(">")[1].split("<")[0];
-                    String units = bufReader
-                        .readLine()
-                        .split(">")[1].split("<")[0];
-                    String description = bufReader
-                        .readLine()
-                        .split(">")[1].split("<")[0];
-                    IoWikiModel ioWikiResponse = new IoWikiModel(
-                        id,
-                        name,
-                        responseType,
-                        minVal,
-                        maxVal,
-                        multiplier,
-                        units,
-                        description
-                    );
-                    ioWikiResponses.add(ioWikiResponse);
-                }
-            }
-        } catch (Exception e) {
-            // Todo AuSbAuFaEhIg
-        }
-        return ioWikiResponses;
+        return true;
     }
 }

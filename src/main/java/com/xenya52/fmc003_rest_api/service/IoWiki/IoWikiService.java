@@ -153,7 +153,7 @@ public class IoWikiService {
     }
 
     // Todo sort the list by id
-    private boolean saveIoWiki(IoWikiModel ioWikiModel) {
+    public boolean saveIoWiki(IoWikiModel ioWikiModel) {
         try {
             ioWikiRepository.save(ioWikiModel);
         } catch (IllegalArgumentException iae) {
@@ -178,6 +178,78 @@ public class IoWikiService {
             );
         }
         return true;
+    }
+
+    public boolean updateIoWiki(IoWikiModel ioWikiModel) {
+        try {
+            if (ioWikiRepository.existsById(ioWikiModel.getWikiId())) {
+                ioWikiRepository.save(ioWikiModel);
+                return true;
+            } else {
+                LOGGER.log(
+                    Level.WARNING,
+                    "Update failed: IoWikiModel with id {0} does not exist.",
+                    ioWikiModel.getWikiId()
+                );
+                return false;
+            }
+        } catch (IllegalArgumentException iae) {
+            LOGGER.log(
+                Level.SEVERE,
+                "IllegalArgumentException: The given IoWikiModel is not valid: {0}",
+                iae.getMessage()
+            );
+            throw new IllegalArgumentException(
+                "The given IoWikiModel is not valid.",
+                iae
+            );
+        } catch (OptimisticLockingFailureException olfe) {
+            LOGGER.log(
+                Level.SEVERE,
+                "OptimisticLockingFailureException: The given IoWikiModel has already changed its state in the database: {0}",
+                olfe.getMessage()
+            );
+            throw new OptimisticLockingFailureException(
+                "The given IoWikiModel has already changed its state in the database.",
+                olfe
+            );
+        }
+    }
+
+    public boolean deleteIoWiki(String id) {
+        try {
+            if (ioWikiRepository.existsById(id)) {
+                ioWikiRepository.deleteById(id);
+                return true;
+            } else {
+                LOGGER.log(
+                    Level.WARNING,
+                    "Delete failed: IoWikiModel with id {0} does not exist.",
+                    id
+                );
+                return false;
+            }
+        } catch (IllegalArgumentException iae) {
+            LOGGER.log(
+                Level.SEVERE,
+                "IllegalArgumentException: The given IoWikiModel is not valid: {0}",
+                iae.getMessage()
+            );
+            throw new IllegalArgumentException(
+                "The given IoWikiModel is not valid.",
+                iae
+            );
+        } catch (OptimisticLockingFailureException olfe) {
+            LOGGER.log(
+                Level.SEVERE,
+                "OptimisticLockingFailureException: The given IoWikiModel has already changed its state in the database: {0}",
+                olfe.getMessage()
+            );
+            throw new OptimisticLockingFailureException(
+                "The given IoWikiModel has already changed its state in the database.",
+                olfe
+            );
+        }
     }
 
     private String getPrevId(String id) {

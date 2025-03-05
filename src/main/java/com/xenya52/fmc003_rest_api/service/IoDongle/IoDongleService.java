@@ -100,10 +100,9 @@ public class IoDongleService {
         }
     }
 
-    private boolean saveIoDongle(IoDongleModel ioDongleModel) {
+    public IoDongleModel saveIoDongle(IoDongleModel ioDongleModel) {
         try {
-            ioDongleRepository.save(ioDongleModel);
-            return true;
+            return ioDongleRepository.save(ioDongleModel);
         } catch (IllegalArgumentException iae) {
             LOGGER.log(
                 Level.SEVERE,
@@ -125,6 +124,21 @@ public class IoDongleService {
                 olfe
             );
         }
+    }
+
+    public IoDongleModel updateIoDongle(IoDongleModel ioDongleModel) {
+        if (!ioDongleRepository.existsById(ioDongleModel.getDeviceId())) {
+            return null;
+        }
+        return saveIoDongle(ioDongleModel);
+    }
+
+    public boolean deleteIoDongle(String id) {
+        if (!ioDongleRepository.existsById(id)) {
+            return false;
+        }
+        ioDongleRepository.deleteById(id);
+        return true;
     }
 
     private String getPrevId(String id) {

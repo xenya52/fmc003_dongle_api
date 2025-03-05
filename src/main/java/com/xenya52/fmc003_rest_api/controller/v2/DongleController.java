@@ -9,11 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v2/dongle")
@@ -64,5 +60,33 @@ public class DongleController {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<IoDongleModel> createDongle(
+        @RequestBody IoDongleModel dongleModel
+    ) {
+        IoDongleModel createdDongle = dongleService.saveIoDongle(dongleModel);
+        return new ResponseEntity<>(createdDongle, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<IoDongleModel> updateDongle(
+        @RequestBody IoDongleModel dongleModel
+    ) {
+        IoDongleModel updatedDongle = dongleService.updateIoDongle(dongleModel);
+        if (updatedDongle == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(updatedDongle, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteDongle(@PathVariable String id) {
+        boolean isDeleted = dongleService.deleteIoDongle(id);
+        if (!isDeleted) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

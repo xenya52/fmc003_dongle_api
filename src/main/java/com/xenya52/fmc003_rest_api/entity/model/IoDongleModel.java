@@ -2,9 +2,7 @@ package com.xenya52.fmc003_rest_api.entity.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import org.springframework.data.annotation.Id;
 
 public class IoDongleModel implements IIo {

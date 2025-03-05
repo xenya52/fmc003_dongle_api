@@ -5,15 +5,18 @@ import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
 import com.xenya52.fmc003_rest_api.service.IoWiki.IoWikiByFile;
 import com.xenya52.fmc003_rest_api.service.IoWiki.IoWikiService;
 import com.xenya52.fmc003_rest_api.service.IoWiki.ScrapeTeltonikaIoWiki;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,18 +33,14 @@ public class IoWikiController {
     @Autowired
     private IoWikiByFile fileIoWikis;
 
+    @Autowired
     private ScrapeTeltonikaIoWiki scrapeTeltonikaIoWiki;
-
-    // Constructor
-    public IoWikiController() {
-        this.scrapeTeltonikaIoWiki = new ScrapeTeltonikaIoWiki(); // TODO: Remove this line
-    }
 
     // Methods
     @GetMapping("/items/all")
     public ResponseEntity<List<GetResponseDto>> ioWikiAll() {
         List<GetResponseDto> response = ioWikiService.getIoWikiList();
-        if (response.getFirst() == null) {
+        if (response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -55,7 +54,7 @@ public class IoWikiController {
             listOfIds
         );
 
-        if (responseList.getFirst() == null) {
+        if (responseList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(responseList, HttpStatus.OK);
@@ -97,5 +96,34 @@ public class IoWikiController {
             return new ResponseEntity<>("Error", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<String> createIoWiki(
+        @RequestBody IoWikiModel ioWikiModel
+    ) {
+        if (ioWikiService.saveIoWiki(ioWikiModel)) {
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> updateIoWiki(
+        @PathVariable String id,
+        @RequestBody IoWikiModel ioWikiModel
+    ) {
+        if (ioWikiService.updateIoWiki(ioWikiModel)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteIoWiki(@PathVariable String id) {
+        if (ioWikiService.deleteIoWiki(id)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

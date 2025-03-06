@@ -120,7 +120,7 @@ The application exposes various REST API endpoints to interact with the data. Be
 - ```GET /v2/io-wiki/items/all``` - Show all IoWikiModels in the DB
 - ```POST /v2/io-wiki/fetch-default-values-into-db``` - Fetches the presaved values, from a file, into the MongoDB
 - ```POST /v2/io-wiki/fetch-advanced-values-into-db``` - Fetches the scraped teltonikaIoPage, from a file, into the MongoDB as IoWikiModels
-- ```POST /v2/io-wiki/fetch-teltonika-io-wiki-into-file``` - Fetches the scraped teltonikaIoPage, into the dataSendingParameters file in the resources folder
+- ```POST /v2/io-wiki/fetch-teltonika-io-wiki-into-file``` - Fetches the scraped teltonikaIoPage, into the dataSendingParameters file in the resources folder, only works every 24 hours, resets at midnight
 - ```POST /v2/io-wiki/create``` - Creates a new IoWikiModel in the DB with the given values
 - ```POST /v2/io-wiki/update/{id}``` - Updates the IoWikiModel in the DB with the given id
 - ```DELETE /v2/io-wiki/delete/{id}``` - Deletes the IoWikiModel in the DB with the given id

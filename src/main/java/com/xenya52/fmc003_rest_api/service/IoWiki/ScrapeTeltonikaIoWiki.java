@@ -34,7 +34,7 @@ public class ScrapeTeltonikaIoWiki {
         "https://wiki.teltonika-gps.com/view/FMC003_Teltonika_Data_Sending_Parameters_ID";
 
     // Methods
-    @Scheduled(cron = "0 12 19 * * *", zone = "Europe/Berlin")
+    @Scheduled(cron = "* * * * * *", zone = "Europe/Berlin")
     private void resetAllreadyFetchedthisDay() {
         LOGGER.log(
             Level.INFO,
@@ -57,6 +57,7 @@ public class ScrapeTeltonikaIoWiki {
                 sb.append(line);
             }
             dataSendingParameters = sb.toString();
+            reader.close();
         } catch (IOException e) {
             LOGGER.log(
                 Level.WARNING,
@@ -101,12 +102,19 @@ public class ScrapeTeltonikaIoWiki {
     }
 
     public boolean fetchTeltonikaIoWikiIntoFile() {
-        String dataSendingParameters =
+        String newDataSendingParameters =
             fetchdataSendingParametersFromTeltonikaIo();
         String oldDataSendingParameters = getdataSendingParametersFromFile();
-        boolean dataHasChanged = oldDataSendingParameters.equals(
-            dataSendingParameters
-        );
+
+        LOGGER.log(Level.INFO, "Old Data: " + oldDataSendingParameters);
+        LOGGER.log(Level.INFO, "New Data: " + newDataSendingParameters);
+
+        boolean dataHasChanged =
+            !oldDataSendingParameters.equals(newDataSendingParameters) &&
+            newDataSendingParameters.length() > 0;
+
+        LOGGER.log(Level.INFO, "Data has changed: " + dataHasChanged);
+
         if (dataHasChanged) {
             LOGGER.log(Level.INFO, "Data has changed, updating the file");
             // Backup oldDataSendingParameters
@@ -116,6 +124,7 @@ public class ScrapeTeltonikaIoWiki {
                 )
             ) {
                 backupWriter.write(oldDataSendingParameters);
+                backupWriter.close();
 
                 LOGGER.log(
                     Level.INFO,
@@ -135,7 +144,8 @@ public class ScrapeTeltonikaIoWiki {
                     new FileWriter(currentFile)
                 )
             ) {
-                currentWriter.write(dataSendingParameters);
+                currentWriter.write(newDataSendingParameters);
+                currentWriter.close();
 
                 LOGGER.log(
                     Level.INFO,

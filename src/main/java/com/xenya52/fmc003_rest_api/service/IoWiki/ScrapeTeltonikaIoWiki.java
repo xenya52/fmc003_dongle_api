@@ -34,7 +34,7 @@ public class ScrapeTeltonikaIoWiki {
         "https://wiki.teltonika-gps.com/view/FMC003_Teltonika_Data_Sending_Parameters_ID";
 
     // Methods
-    @Scheduled(cron = "* * * * * *", zone = "Europe/Berlin")
+    @Scheduled(cron = "* * 12 * * *", zone = "Europe/Berlin")
     private void resetAllreadyFetchedthisDay() {
         LOGGER.log(
             Level.INFO,
@@ -106,14 +106,9 @@ public class ScrapeTeltonikaIoWiki {
             fetchdataSendingParametersFromTeltonikaIo();
         String oldDataSendingParameters = getdataSendingParametersFromFile();
 
-        LOGGER.log(Level.INFO, "Old Data: " + oldDataSendingParameters);
-        LOGGER.log(Level.INFO, "New Data: " + newDataSendingParameters);
-
         boolean dataHasChanged =
             !oldDataSendingParameters.equals(newDataSendingParameters) &&
             newDataSendingParameters.length() > 0;
-
-        LOGGER.log(Level.INFO, "Data has changed: " + dataHasChanged);
 
         if (dataHasChanged) {
             LOGGER.log(Level.INFO, "Data has changed, updating the file");

@@ -2,12 +2,8 @@ package com.xenya52.fmc003_rest_api.entity.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
-@Getter
-@Setter
 public class IoWikiModel implements IIo {
 
     // Attributes
@@ -126,7 +122,6 @@ public class IoWikiModel implements IIo {
     }
 
     // Methods
-
     public String getWikiId() {
         return wikiId;
     }
@@ -145,6 +140,30 @@ public class IoWikiModel implements IIo {
 
     public String getWikiName() {
         return wikiName;
+    }
+
+    public String getWikiDescription() {
+        return wikiDescription;
+    }
+
+    public String getWikiType() {
+        return wikiType;
+    }
+
+    public String getMultiplier() {
+        return multiplier;
+    }
+
+    public String getValMin() {
+        return valMin;
+    }
+
+    public String getValMax() {
+        return valMax;
+    }
+
+    public String getUnit() {
+        return unit;
     }
 
     @Override

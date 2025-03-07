@@ -54,6 +54,11 @@ public class IoWikiController {
             listOfIds
         );
 
+        // Debug
+        for (GetResponseDto getResponseDto : responseList) {
+            System.out.println(getResponseDto);
+        }
+
         if (responseList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

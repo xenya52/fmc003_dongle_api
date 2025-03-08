@@ -31,6 +31,7 @@ Prerequisites
 ---------
 
 - Java 11 or higher
+- maven 3 or higher
 - Docker (optional for containerization)
 
 Installation
@@ -98,6 +99,15 @@ Service
 ---------
 
 The service package is responsible for implementing the business logic of the application. It acts as an intermediary between the controller and the repository layers.
+It is separated into two parts.
+
+### IoWiki
+
+Heres everything what is important to parse the key values of the dongle model into readable informations with that you can work with in the frontend. Furthermore heres the method stored to fetch the required values from the teltonika io wiki page.
+
+### IoDongle
+
+The IoDongle folder is responsible for accepting dongleDate and implementing functions to get some dumby data for debugging reasons.
 
 Controller
 ---------

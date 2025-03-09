@@ -6,7 +6,7 @@ Sidenote: I aim to demonstrate a clean and efficient structure for a typical RES
 Overview
 ---------
 
-This repository provides a REST API to fetch data from the database of your choice and make it available as easy-to-understand RESTful APIs.
+This repository provides a REST API to fetch data from the database of your choice and make it available as easy-to-understand RESTful APIs. To use this repo its necessary to host MongoDB in some way. I decided to host it with a docker compose file because its the simpliest way.
 
 Table of Contents
 ---------
@@ -25,7 +25,8 @@ Table of Contents
 Getting Started
 ---------
 
-To get a local copy of the project up and running, follow these steps.
+To get a local copy of the project up and running, follow these steps. 
+(This will change soon, because Im not satisfied with my work here, so here is it possible to collaborate)
 
 Prerequisites
 ---------
@@ -68,7 +69,7 @@ The ```IoDongleModel``` class is a Java model representing a device. It includes
 
 - **Attributes**:
   - ```deviceId```: A long value representing the Device ID.
-  - ```ioWikiModelList```: A list of IoWikiModel objects.
+  - ```dongleValues```: A Map<String, String> the key is the id of a IoWikiModel and the value, as the name said, the value.
 
 
 The ```IoWikiModel``` class is a Java model representing a wiki entry from the left Site to explain the id that you get. It includes the following:
@@ -112,7 +113,7 @@ The IoDongle folder is responsible for accepting dongleDate and implementing fun
 Controller
 ---------
 
-The controller package manages HTTP requests and responses, handling the incoming API calls.
+The controller package manages HTTP requests and responses, handling the incoming API calls. My Controller presenting the following endpoints down below for IoWikiModels and IoDongleModels. 
 
 Endpoints
 ---------

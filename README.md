@@ -6,7 +6,7 @@ Sidenote: I aim to demonstrate a clean and efficient structure for a typical RES
 Overview
 ---------
 
-This repository provides a REST API to fetch data from the database of your choice and make it available as easy-to-understand RESTful APIs.
+This repository provides a REST API to fetch data from the database of your choice and make it available as easy-to-understand RESTful APIs. To use this repo its necessary to host MongoDB in some way. I decided to host it with a docker compose file because its the simpliest way.
 
 Table of Contents
 ---------
@@ -25,12 +25,14 @@ Table of Contents
 Getting Started
 ---------
 
-To get a local copy of the project up and running, follow these steps.
+To get a local copy of the project up and running, follow these steps. 
+(This will change soon, because Im not satisfied with my work here, so here is it possible to collaborate)
 
 Prerequisites
 ---------
 
 - Java 11 or higher
+- maven 3 or higher
 - Docker (optional for containerization)
 
 Installation
@@ -69,7 +71,7 @@ The ```IoDongleModel``` class is a Java model representing a device. It includes
 
 - **Attributes**:
   - ```deviceId```: A long value representing the Device ID.
-  - ```ioWikiModelList```: A list of IoWikiModel objects.
+  - ```dongleValues```: A Map<String, String> the key is the id of a IoWikiModel and the value, as the name said, the value.
 
 
 The ```IoWikiModel``` class is a Java model representing a wiki entry from the left Site to explain the id that you get. It includes the following:
@@ -97,12 +99,25 @@ For more details, you can view the [file](https://github.com/xenya52/fmc003_rest
 Service
 ---------
 
+<<<<<<< HEAD
 The service package is responsible for implementing the business logic of the application. It acts as an intermediary between the controller and the repository layers. The service layer ensures that the data flow is managed correctly and that the business rules are applied consistently.
+=======
+The service package is responsible for implementing the business logic of the application. It acts as an intermediary between the controller and the repository layers.
+It is separated into two parts.
+
+### IoWiki
+
+Heres everything what is important to parse the key values of the dongle model into readable informations with that you can work with in the frontend. Furthermore heres the method stored to fetch the required values from the teltonika io wiki page.
+
+### IoDongle
+
+The IoDongle folder is responsible for accepting dongleDate and implementing functions to get some dumby data for debugging reasons.
+>>>>>>> 8b37da380e7df636f7d34ef0f5c4679ac4875084
 
 Controller
 ---------
 
-The controller package manages HTTP requests and responses, handling the incoming API calls.
+The controller package manages HTTP requests and responses, handling the incoming API calls. My Controller presenting the following endpoints down below for IoWikiModels and IoDongleModels. 
 
 Repository
 ---------

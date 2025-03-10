@@ -53,6 +53,8 @@ cd fmc003_rest-api
 ./mvnw spring-boot:run
 ```
 
+After that you can go on localhost:8080/api-docs to see a advanced view of all APIs and responses. Additionally you can open up http://localhost:8080/swagger-ui/index.html#/ to interact with the swagger ui. More informations about the APIs are down below. Thanks for setting up my program. <3
+
 Project Structure
 ---------
 
@@ -92,17 +94,21 @@ For more details, you can view the [file](https://github.com/xenya52/fmc003_rest
 - ```IoDongleModel``` includes a list of IoWikiModel objects and methods to handle JSON serialization and deserialization.
 - ```IoWikiModel``` focuses on representing wiki entries with various attributes and provides multiple constructors for flexibility.
 
-
-
 Service
 ---------
 
-The service package is responsible for implementing the business logic of the application. It acts as an intermediary between the controller and the repository layers.
+The service package is responsible for implementing the business logic of the application. It acts as an intermediary between the controller and the repository layers. The service layer ensures that the data flow is managed correctly and that the business rules are applied consistently.
 
 Controller
 ---------
 
 The controller package manages HTTP requests and responses, handling the incoming API calls.
+
+Repository
+---------
+
+This repository is designed to provide a robust and scalable REST API solution for managing IoWiki and IoDongle models. It leverages the power of Java and Spring Boot to create a clean and efficient structure, ensuring that the API is easy to understand and extend. The repository also includes comprehensive documentation and a well-organized project structure, making it simple for developers to get started and contribute. With support for MongoDB and optional Docker containerization, this project is equipped to handle a variety of deployment scenarios. Whether you are looking to fetch data, create new entries, or update existing ones, this REST API provides all the necessary endpoints to interact with your data seamlessly.
+
 
 Endpoints
 ---------

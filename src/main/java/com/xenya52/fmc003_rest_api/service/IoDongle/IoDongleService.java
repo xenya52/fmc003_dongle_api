@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 
+/**
+ * Service class for managing IoDongle entities.
+ */
 @Component
 public class IoDongleService {
 
@@ -29,7 +32,11 @@ public class IoDongleService {
 
     // Methods
 
-    // Todo implement edge cases for saveIoDongleList
+    /**
+     * Saves a list of IoDongleModel entities.
+     * @param ioDongleModels List of IoDongleModel entities to be saved.
+     * @return true if all entities are saved successfully.
+     */
     public boolean saveIoDongleList(List<IoDongleModel> ioDongleModels) {
         for (IoDongleModel ioDongleModel : ioDongleModels) {
             saveIoDongle(ioDongleModel);
@@ -37,6 +44,10 @@ public class IoDongleService {
         return true;
     }
 
+    /**
+     * Retrieves a list of all IoDongle entities.
+     * @return List of GetResponseDto containing all IoDongle entities.
+     */
     public List<GetResponseDto> getIoDongleList() {
         List<IoDongleModel> ioDongleModelList = ioDongleRepository.findAll();
         List<GetResponseDto> ioDongleDtoList = new ArrayList<>();
@@ -48,6 +59,11 @@ public class IoDongleService {
         return ioDongleDtoList;
     }
 
+    /**
+     * Retrieves a list of IoDongle entities by specific IDs.
+     * @param ids List of IDs to retrieve IoDongle entities.
+     * @return List of GetResponseDto containing the IoDongle entities with the specified IDs.
+     */
     public List<GetResponseDto> getIoDongleListBySpecificId(List<String> ids) {
         List<GetResponseDto> responseDtos = new ArrayList<>();
 
@@ -63,6 +79,11 @@ public class IoDongleService {
         return responseDtos;
     }
 
+    /**
+     * Retrieves an IoDongle entity by its ID.
+     * @param id ID of the IoDongle entity to retrieve.
+     * @return GetResponseDto containing the IoDongle entity and its links, or null if not found.
+     */
     private GetResponseDto getIoDongleById(String id) {
         try {
             IoDongleModel dongleModel = ioDongleRepository
@@ -100,6 +121,11 @@ public class IoDongleService {
         }
     }
 
+    /**
+     * Saves an IoDongle entity.
+     * @param ioDongleModel IoDongle entity to be saved.
+     * @return The saved IoDongle entity.
+     */
     public IoDongleModel saveIoDongle(IoDongleModel ioDongleModel) {
         try {
             return ioDongleRepository.save(ioDongleModel);
@@ -126,6 +152,11 @@ public class IoDongleService {
         }
     }
 
+    /**
+     * Updates an existing IoDongle entity.
+     * @param ioDongleModel IoDongle entity to be updated.
+     * @return The updated IoDongle entity, or null if the entity does not exist.
+     */
     public IoDongleModel updateIoDongle(IoDongleModel ioDongleModel) {
         if (!ioDongleRepository.existsById(ioDongleModel.getDeviceId())) {
             return null;
@@ -133,6 +164,11 @@ public class IoDongleService {
         return saveIoDongle(ioDongleModel);
     }
 
+    /**
+     * Deletes an IoDongle entity by its ID.
+     * @param id ID of the IoDongle entity to delete.
+     * @return true if the entity is deleted successfully, false if the entity does not exist.
+     */
     public boolean deleteIoDongle(String id) {
         if (!ioDongleRepository.existsById(id)) {
             return false;
@@ -141,6 +177,11 @@ public class IoDongleService {
         return true;
     }
 
+    /**
+     * Retrieves the previous ID in the list of IoDongle entities.
+     * @param id Current ID to find the previous ID for.
+     * @return The previous ID in the list.
+     */
     private String getPrevId(String id) {
         List<IoDongleModel> ioDongleModelList = ioDongleRepository.findAll();
         try {
@@ -174,6 +215,11 @@ public class IoDongleService {
         }
     }
 
+    /**
+     * Retrieves the next ID in the list of IoDongle entities.
+     * @param id Current ID to find the next ID for.
+     * @return The next ID in the list.
+     */
     private String getNextId(String id) {
         List<IoDongleModel> ioDongleModelList = ioDongleRepository.findAll();
         try {

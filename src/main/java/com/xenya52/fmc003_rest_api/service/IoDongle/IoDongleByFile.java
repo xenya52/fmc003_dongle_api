@@ -18,6 +18,9 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Class responsible for handling IoDongle data from a file.
+ */
 @Component
 public class IoDongleByFile {
 
@@ -33,7 +36,12 @@ public class IoDongleByFile {
         IoDongleByFile.class.getName()
     );
 
-    // Methods
+    /**
+     * Parses the JSON body to extract Base64 encoded strings.
+     *
+     * @param jsonString the JSON string to parse
+     * @return a list of Base64 encoded strings
+     */
     private static List<String> parseJsonBody(String jsonString) {
         List<String> base64Strings = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -63,6 +71,12 @@ public class IoDongleByFile {
         return base64Strings;
     }
 
+    /**
+     * Decodes a list of Base64 encoded strings.
+     *
+     * @param base64Strings the list of Base64 encoded strings
+     * @return a list of maps containing dongle IDs and their values
+     */
     private List<Map<String, String>> decodeBase64List(
         List<String> base64Strings
     ) {
@@ -131,6 +145,11 @@ public class IoDongleByFile {
         return dongleIdsAndValues;
     }
 
+    /**
+     * Reads the file and converts its content to a list of IoDongleModel objects.
+     *
+     * @return a list of IoDongleModel objects
+     */
     public List<IoDongleModel> dongleModelsByFile() {
         List<IoDongleModel> dongleList = new ArrayList<>();
         File file = new File(defaultFilePath);

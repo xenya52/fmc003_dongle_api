@@ -24,6 +24,11 @@ public class IoWikiByFile {
     final String advancedDefaultFilePath =
         "src/main/resources/dataSendingParameters.txt";
 
+    /**
+     * Reads and processes the advanced dongle models from a file.
+     *
+     * @return a list of IoWikiModel objects containing the advanced dongle models.
+     */
     public List<IoWikiModel> advancedDongleModelsByFile() {
         List<IoWikiModel> ioWikiResponses = new ArrayList<>();
 
@@ -114,6 +119,11 @@ public class IoWikiByFile {
         return ioWikiResponses;
     }
 
+    /**
+     * Reads and processes the dongle models from a file.
+     *
+     * @return a list of IoWikiModel objects containing the dongle models.
+     */
     public List<IoWikiModel> dongleModelsByFile() {
         List<IoWikiModel> content = new ArrayList<>();
         String filePath = defaultFilePath;

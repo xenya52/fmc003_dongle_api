@@ -24,7 +24,11 @@ public class IoWikiService {
     @Autowired
     private IoWikiRepository ioWikiRepository;
 
-    // Methods
+    /**
+     * Retrieves a list of IoWiki entries by their IDs.
+     * @param ids List of IDs to retrieve.
+     * @return List of GetResponseDto containing the IoWiki entries.
+     */
     public List<GetResponseDto> getIoWikiListById(List<String> ids) {
         List<GetResponseDto> getResponseDtos = new ArrayList<>();
 
@@ -40,6 +44,11 @@ public class IoWikiService {
         return getResponseDtos;
     }
 
+    /**
+     * Retrieves a single IoWiki entry by its ID.
+     * @param id The ID of the IoWiki entry.
+     * @return GetResponseDto containing the IoWiki entry and its links.
+     */
     private GetResponseDto getIoWikiById(String id) {
         IoWikiModel wikiModel = ioWikiRepository.findByWikiId(id).orElse(null);
         try {
@@ -75,6 +84,11 @@ public class IoWikiService {
         }
     }
 
+    /**
+     * Retrieves a single IoWiki entry by its name.
+     * @param name The name of the IoWiki entry.
+     * @return GetResponseDto containing the IoWiki entry and its links.
+     */
     public GetResponseDto getIoWikiByName(String name) {
         IoWikiModel wikiModel = ioWikiRepository
             .findByWikiName(name)
@@ -88,6 +102,10 @@ public class IoWikiService {
         return wikiModel == null ? null : new GetResponseDto(wikiModel, links);
     }
 
+    /**
+     * Retrieves a list of all IoWiki entries.
+     * @return List of GetResponseDto containing all IoWiki entries.
+     */
     public List<GetResponseDto> getIoWikiList() {
         List<IoWikiModel> ioWikiModelList = ioWikiRepository.findAll();
         List<GetResponseDto> ioWikiDtoList = new ArrayList<>();
@@ -121,6 +139,11 @@ public class IoWikiService {
         return ioWikiDtoList;
     }
 
+    /**
+     * Saves a list of IoWiki entries.
+     * @param ioWikiList List of IoWiki entries to save.
+     * @return true if all entries were saved successfully, false otherwise.
+     */
     public boolean saveIoWikiList(List<IoWikiModel> ioWikiList) {
         try {
             for (IoWikiModel ioWikiModel : ioWikiList) {
@@ -152,7 +175,11 @@ public class IoWikiService {
         return true;
     }
 
-    // Todo sort the list by id
+    /**
+     * Saves a single IoWiki entry.
+     * @param ioWikiModel The IoWiki entry to save.
+     * @return true if the entry was saved successfully, false otherwise.
+     */
     public boolean saveIoWiki(IoWikiModel ioWikiModel) {
         try {
             ioWikiRepository.save(ioWikiModel);
@@ -180,6 +207,11 @@ public class IoWikiService {
         return true;
     }
 
+    /**
+     * Updates a single IoWiki entry.
+     * @param ioWikiModel The IoWiki entry to update.
+     * @return true if the entry was updated successfully, false otherwise.
+     */
     public boolean updateIoWiki(IoWikiModel ioWikiModel) {
         try {
             if (ioWikiRepository.existsById(ioWikiModel.getWikiId())) {
@@ -216,6 +248,11 @@ public class IoWikiService {
         }
     }
 
+    /**
+     * Deletes a single IoWiki entry by its ID.
+     * @param id The ID of the IoWiki entry to delete.
+     * @return true if the entry was deleted successfully, false otherwise.
+     */
     public boolean deleteIoWiki(String id) {
         try {
             if (ioWikiRepository.existsById(id)) {
@@ -252,6 +289,11 @@ public class IoWikiService {
         }
     }
 
+    /**
+     * Retrieves the previous ID in the sorted list of IoWiki entries.
+     * @param id The current ID.
+     * @return The previous ID, or an empty string if there is no previous ID.
+     */
     private String getPrevId(String id) {
         List<IoWikiModel> ioWikiModelList = ioWikiRepository.findAll();
         try {
@@ -284,6 +326,11 @@ public class IoWikiService {
         }
     }
 
+    /**
+     * Retrieves the next ID in the sorted list of IoWiki entries.
+     * @param id The current ID.
+     * @return The next ID, or an empty string if there is no next ID.
+     */
     private String getNextId(String id) {
         List<IoWikiModel> ioWikiModelList = ioWikiRepository.findAll();
         try {

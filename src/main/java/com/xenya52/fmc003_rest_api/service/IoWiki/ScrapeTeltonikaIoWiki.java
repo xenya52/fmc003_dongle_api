@@ -13,9 +13,9 @@ import org.jsoup.select.Elements;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-/***
- * This class is responsible for scraping the Teltonika wiki
- * and returning the data sending parameters
+/**
+ * @class ScrapeTeltonikaIoWiki
+ * @brief This class is responsible for scraping the Teltonika wiki and returning the data sending parameters.
  */
 @Component
 public class ScrapeTeltonikaIoWiki {
@@ -33,7 +33,9 @@ public class ScrapeTeltonikaIoWiki {
     final String teltonikaUrl =
         "https://wiki.teltonika-gps.com/view/FMC003_Teltonika_Data_Sending_Parameters_ID";
 
-    // Methods
+    /**
+     * @brief Resets the allreadyFetchedthisDay flag to false at a scheduled time.
+     */
     @Scheduled(cron = "* * 12 * * *", zone = "Europe/Berlin")
     private void resetAllreadyFetchedthisDay() {
         LOGGER.log(
@@ -44,6 +46,10 @@ public class ScrapeTeltonikaIoWiki {
         LOGGER.log(Level.INFO, "Value = " + allreadyFetchedthisDay);
     }
 
+    /**
+     * @brief Reads the data sending parameters from a file.
+     * @return A string containing the data sending parameters.
+     */
     private String getdataSendingParametersFromFile() {
         String dataSendingParameters = "";
         try (
@@ -64,14 +70,23 @@ public class ScrapeTeltonikaIoWiki {
                 "Error reading data sending parameters from file",
                 e
             );
+        } catch (NullPointerException npe) {
+            LOGGER.log(
+                Level.SEVERE,
+                "NullPointerException: The id is not valid. Please provide a valid id: {0}",
+                npe.getMessage()
+            );
+            throw new IllegalArgumentException(
+                "The id is not valid. Please provide a valid id.",
+                npe
+            );
         }
         return dataSendingParameters;
     }
 
-    /***
-     * Fetches the data sending parameters
-     * from the Teltonika wiki
-     * @return a string containing the data sending parameters
+    /**
+     * @brief Fetches the data sending parameters from the Teltonika wiki.
+     * @return A string containing the data sending parameters.
      */
     private String fetchdataSendingParametersFromTeltonikaIo() {
         if (!allreadyFetchedthisDay) {
@@ -84,13 +99,23 @@ public class ScrapeTeltonikaIoWiki {
                 Elements rows = body.select("tr");
 
                 return rows.toString();
-            } catch (Exception e) {
+            } catch (IOException e) {
                 LOGGER.log(
                     Level.SEVERE,
                     "Error fetching data sending parameters from Teltonika Io",
                     e
                 );
                 return e.getMessage();
+            } catch (NullPointerException npe) {
+                LOGGER.log(
+                    Level.SEVERE,
+                    "NullPointerException: The id is not valid. Please provide a valid id: {0}",
+                    npe.getMessage()
+                );
+                throw new IllegalArgumentException(
+                    "The id is not valid. Please provide a valid id.",
+                    npe
+                );
             }
         } else {
             LOGGER.log(
@@ -101,6 +126,10 @@ public class ScrapeTeltonikaIoWiki {
         }
     }
 
+    /**
+     * @brief Fetches the Teltonika Io wiki data and writes it into a file.
+     * @return A boolean indicating whether the data has changed and been updated.
+     */
     public boolean fetchTeltonikaIoWikiIntoFile() {
         String newDataSendingParameters =
             fetchdataSendingParametersFromTeltonikaIo();
@@ -131,6 +160,16 @@ public class ScrapeTeltonikaIoWiki {
                     "Error writing backup data sending parameters to file",
                     e
                 );
+            } catch (NullPointerException npe) {
+                LOGGER.log(
+                    Level.SEVERE,
+                    "NullPointerException: The id is not valid. Please provide a valid id: {0}",
+                    npe.getMessage()
+                );
+                throw new IllegalArgumentException(
+                    "The id is not valid. Please provide a valid id.",
+                    npe
+                );
             }
 
             // Write new dataSendingParameters to current file
@@ -152,6 +191,16 @@ public class ScrapeTeltonikaIoWiki {
                     Level.SEVERE,
                     "Error writing data sending parameters to file",
                     e
+                );
+            } catch (NullPointerException npe) {
+                LOGGER.log(
+                    Level.SEVERE,
+                    "NullPointerException: The id is not valid. Please provide a valid id: {0}",
+                    npe.getMessage()
+                );
+                throw new IllegalArgumentException(
+                    "The id is not valid. Please provide a valid id.",
+                    npe
                 );
             }
         }

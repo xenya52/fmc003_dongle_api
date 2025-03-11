@@ -20,9 +20,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * @brief Controller for IoWiki operations in version 2 of the API.
- */
 @Slf4j
 @RestController
 @RequestMapping("/v2/io-wiki")
@@ -39,10 +36,7 @@ public class IoWikiController {
     @Autowired
     private ScrapeTeltonikaIoWiki scrapeTeltonikaIoWiki;
 
-    /**
-     * @brief Get all IoWiki items.
-     * @return ResponseEntity containing a list of GetResponseDto or NOT_FOUND status.
-     */
+    // Methods
     @GetMapping("/items/all")
     public ResponseEntity<List<GetResponseDto>> ioWikiAll() {
         List<GetResponseDto> response = ioWikiService.getIoWikiList();
@@ -52,11 +46,6 @@ public class IoWikiController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    /**
-     * @brief Get IoWiki items by a list of IDs.
-     * @param listOfIds List of IoWiki item IDs.
-     * @return ResponseEntity containing a list of GetResponseDto or NOT_FOUND status.
-     */
     @GetMapping("/items/{listOfIds}")
     public ResponseEntity<List<GetResponseDto>> ioWikiList(
         @PathVariable List<String> listOfIds
@@ -76,10 +65,6 @@ public class IoWikiController {
         return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
 
-    /**
-     * @brief Fetch default values into the database.
-     * @return ResponseEntity with status OK or error status.
-     */
     @PostMapping("/fetch-default-values-into-db")
     public ResponseEntity<String> defaultValuesIntoDB() {
         List<IoWikiModel> idsAndNames;
@@ -95,10 +80,6 @@ public class IoWikiController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    /**
-     * @brief Fetch advanced values into the database.
-     * @return ResponseEntity with status OK or error status.
-     */
     @PostMapping("/fetch-advanced-values-into-db")
     public ResponseEntity<String> advencedValuesIntoDB() {
         List<IoWikiModel> advancedDongleModels;
@@ -114,10 +95,6 @@ public class IoWikiController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    /**
-     * @brief Fetch Teltonika IoWiki data into a file.
-     * @return ResponseEntity with status OK or error status.
-     */
     @PostMapping("/fetch-teltonika-io-wiki-into-file")
     public ResponseEntity<String> fetchTeltonikaIoWikiIntoFile() {
         if (!scrapeTeltonikaIoWiki.fetchTeltonikaIoWikiIntoFile()) {
@@ -126,11 +103,6 @@ public class IoWikiController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    /**
-     * @brief Create a new IoWiki item.
-     * @param ioWikiModel IoWikiModel object to be created.
-     * @return ResponseEntity with status CREATED or CONFLICT.
-     */
     @PostMapping("/create")
     public ResponseEntity<String> createIoWiki(
         @RequestBody IoWikiModel ioWikiModel
@@ -141,12 +113,6 @@ public class IoWikiController {
         return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
-    /**
-     * @brief Update an existing IoWiki item.
-     * @param id ID of the IoWiki item to be updated.
-     * @param ioWikiModel IoWikiModel object with updated data.
-     * @return ResponseEntity with status OK or NOT_FOUND.
-     */
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateIoWiki(
         @PathVariable String id,
@@ -158,11 +124,6 @@ public class IoWikiController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    /**
-     * @brief Delete an IoWiki item.
-     * @param id ID of the IoWiki item to be deleted.
-     * @return ResponseEntity with status OK or NOT_FOUND.
-     */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteIoWiki(@PathVariable String id) {
         if (ioWikiService.deleteIoWiki(id)) {

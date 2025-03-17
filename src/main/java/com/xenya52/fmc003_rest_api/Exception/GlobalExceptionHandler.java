@@ -1,4 +1,4 @@
-package com.xenya52.fmc003_rest_api.Exception;
+package com.xenya52.fmc003_rest_api.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-Heres the issue
 @ControllerAdvice
 public class GlobalExceptionHandler {
 

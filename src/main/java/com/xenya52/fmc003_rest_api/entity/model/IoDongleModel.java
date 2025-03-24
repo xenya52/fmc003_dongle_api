@@ -22,25 +22,20 @@ public class IoDongleModel implements IIo {
     }
 
     // Constructors
-    public IoDongleModel(Map<String, String> ioWikiIdsAndValues) {
-        this.deviceId = debugCreateRandomID();
-        this.wikiIdAndDongleValues = ioWikiIdsAndValues;
+    public IoDongleModel(
+        String deviceId,
+        Map<String, String> wikiIdAndDongleValues
+    ) {
+        this.deviceId = deviceId;
+        this.wikiIdAndDongleValues = wikiIdAndDongleValues;
     }
 
     // Todo implement a no args constructor
-    public IoDongleModel() {
-        this.deviceId = debugCreateRandomID();
-    }
+    public IoDongleModel() {}
 
     // Methods
     public Map<String, String> getIoWikiIdAndDongleValues() {
         return wikiIdAndDongleValues;
-    }
-
-    private String debugCreateRandomID() {
-        // Get random number
-        int random = (int) (Math.random() * 1000000);
-        return String.valueOf(random);
     }
 
     @Override

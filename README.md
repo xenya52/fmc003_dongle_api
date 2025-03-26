@@ -1,7 +1,6 @@
-# FMC003 Rest API
+# FMC003 Rest API 
 
 A REST API that is easy to understand.
-Sidenote: I aim to demonstrate a clean and efficient structure for a typical REST API application
 
 Overview
 ---------

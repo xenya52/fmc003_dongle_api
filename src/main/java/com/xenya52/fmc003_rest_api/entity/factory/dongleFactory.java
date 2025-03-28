@@ -21,42 +21,35 @@ public class DongleFactory {
     // Methods
 
     /**
-     * Todo
+     * Generates a random ID as a string.
+     * @return a random ID as a string
      */
     private String createRandomID() {
-        // Get random number
         int random = (int) (Math.random() * 1000000);
         return String.valueOf(random);
     }
 
     /**
      * Generates a new IoDongleModel entity with the given parameters.
-     * @param id the id of the entity
-     * @param name the name of the entity
-     * @param wikiId the wikiId of the entity
+     * @param ioWikiAmount the number of IoWikiModels to add to the IoDongleModel
      * @return a new IoDongleModel entity with the given parameters
      */
-    public IoDongleModel generateIoDongleModel() {
+    public IoDongleModel generateIoDongleModelWithNoneValues(int ioWikiAmount) {
         String id = createRandomID();
-        List<IoWikiModel> wikiModels = this.wikiModels;
+        List<IoWikiModel> wikiModels = wikiModelsDatabase;
 
         IoDongleModel dongleModel = new IoDongleModel();
-        dongleModel.setId(id);
-        dongleModel.setName(name);
+        dongleModel.setDeviceId(id);
+        int addedCount = 0;
         for (IoWikiModel wikiModel : wikiModels) {
-            if (wikiModel.getId() == wikiId) {
-                dongleModel.setWikiModel(wikiModel);
+            if (addedCount >= ioWikiAmount) {
                 break;
+            }
+            if (Math.random() > 0.5) { // Randomly decide whether to add this wikiModel
+                dongleModel.addIoWikiModel(wikiModel.getWikiId(), "0");
+                addedCount++;
             }
         }
         return dongleModel;
-    }
-
-    /**
-     * Generates a new IoDongleModel entity.
-     * @return a new IoDongleModel entity
-     */
-    public IoDongleModel generateIoDongleModel() {
-        return new IoDongleModel();
     }
 }

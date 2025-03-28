@@ -21,6 +21,10 @@ public class IoDongleModel implements IIo {
         this.deviceId = deviceId;
     }
 
+    public void addIoWikiModel(String wikiId, String dongleValue) {
+        wikiIdAndDongleValues.put(wikiId, dongleValue);
+    }
+
     // Constructors
     public IoDongleModel(
         String deviceId,

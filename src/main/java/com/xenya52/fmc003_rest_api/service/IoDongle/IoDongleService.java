@@ -31,6 +31,19 @@ public class IoDongleService {
     public IoDongleService() {}
 
     // Methods
+    public boolean generateDonglesWithNoneValues(
+        int dongleAmount,
+        int wikiAmount
+    ) {
+        List<IoDongleModel> dongleModels = new ArrayList<>();
+        for (int i = 0; i < dongleAmount; i++) {
+            IoDongleModel dongleModel = new IoDongleModel();
+            dongleModel.setDeviceId(createRandomID());
+            !t // Todo use factory here
+            dongleModels.add(dongleModel);
+        }
+        return saveIoDongleList(dongleModels);
+    }
 
     /**
      * Saves a list of IoDongleModel entities.

@@ -45,8 +45,8 @@ public class DongleFactory {
             if (addedCount >= ioWikiAmount) {
                 break;
             }
-            if (Math.random() > 0.5) { // Randomly decide whether to add this wikiModel
-                dongleModel.addIoWikiModel(wikiModel.getWikiId(), "0");
+            if (Math.random() > 0.5) {
+                dongleModel.addIoWikiModel(wikiModel.getWikiId(), "0"); // TODO make this more flexible
                 addedCount++;
             }
         }

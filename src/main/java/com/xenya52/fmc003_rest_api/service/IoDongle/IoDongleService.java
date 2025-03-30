@@ -1,6 +1,7 @@
 package com.xenya52.fmc003_rest_api.service.IoDongle;
 
 import com.xenya52.fmc003_rest_api.entity.dto.GetResponseDto;
+import com.xenya52.fmc003_rest_api.entity.factory.DongleFactory;
 import com.xenya52.fmc003_rest_api.entity.model.IoDongleModel;
 import com.xenya52.fmc003_rest_api.repository.IoDongleRepository;
 import java.util.ArrayList;
@@ -27,19 +28,29 @@ public class IoDongleService {
     @Autowired
     private IoDongleRepository ioDongleRepository;
 
+    @Autowired
+    private DongleFactory dongleFactory;
+
     // Constructors
     public IoDongleService() {}
 
     // Methods
-    public boolean generateDonglesWithNoneValues(
+
+    /**
+     * Generates a specified number of IoDongleModel entities with 'None' values and saves them.
+     * @param dongleAmount The number of dongles to generate.
+     * @param wikiAmount The number of wiki entries to associate with each dongle.
+     * @return true if all entities are saved successfully.
+     */
+    public boolean generateDonglesWithNoneValuesAndSaveIntoDB(
         int dongleAmount,
         int wikiAmount
     ) {
         List<IoDongleModel> dongleModels = new ArrayList<>();
+
         for (int i = 0; i < dongleAmount; i++) {
-            IoDongleModel dongleModel = new IoDongleModel();
-            dongleModel.setDeviceId(createRandomID());
-            !t // Todo use factory here
+            IoDongleModel dongleModel =
+                dongleFactory.generateIoDongleModelWithNoneValues(wikiAmount);
             dongleModels.add(dongleModel);
         }
         return saveIoDongleList(dongleModels);

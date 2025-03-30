@@ -80,6 +80,22 @@ public class DongleController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PostMapping("/generate-dongles-with-none-values-into-db")
+    public ResponseEntity<String> generateDonglesWithNoneValues(
+        @RequestParam int dongleAmount,
+        @RequestParam int wikiAmount
+    ) {
+        if (
+            !dongleService.generateDonglesWithNoneValuesAndSaveIntoDB(
+                dongleAmount,
+                wikiAmount
+            )
+        ) {
+            return new ResponseEntity<>("Error", HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     /**
      * Creates a new IoDongle item.
      *

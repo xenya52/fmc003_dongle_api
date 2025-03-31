@@ -3,6 +3,8 @@ package com.xenya52.fmc003_rest_api.service.IoDongle;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonAppend.Attr;
+import com.xenya52.fmc003_rest_api.entity.factory.DongleFactory;
 import com.xenya52.fmc003_rest_api.entity.model.IoDongleModel;
 import com.xenya52.fmc003_rest_api.repository.IoWikiRepository;
 import java.io.File;
@@ -27,6 +29,9 @@ public class IoDongleByFile {
     // Attributes
     @Autowired
     IoWikiRepository ioWikiRepository;
+
+    @Autowired
+    DongleFactory dongleFactory;
 
     // Default file path TODO make this configurable OR a generator for dumb data
     final String defaultFilePath =
@@ -169,7 +174,8 @@ public class IoDongleByFile {
             );
 
             for (Map<String, String> dongleIdAndValue : dongleIdsAndValues) {
-                IoDongleModel dongleModel = new IoDongleModel(dongleIdAndValue);
+                IoDongleModel dongleModel =
+                    dongleFactory.manuallyCreateDongleModel(dongleIdAndValue);
                 dongleList.add(dongleModel);
             }
         } catch (FileNotFoundException e) {

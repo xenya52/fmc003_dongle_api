@@ -3,7 +3,7 @@ package com.xenya52.fmc003_rest_api.entity.factory;
 import com.xenya52.fmc003_rest_api.entity.model.IoDongleModel;
 import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
 import java.util.List;
-import org.checkerframework.checker.units.qual.A;
+import java.util.Map;
 
 /**
  * Factory class for creating IoDongleModel entities.
@@ -49,6 +49,21 @@ public class DongleFactory {
                 dongleModel.addIoWikiModel(wikiModel.getWikiId(), "0"); // TODO make this more flexible
                 addedCount++;
             }
+        }
+        return dongleModel;
+    }
+
+    /**
+     * Manually creates a new IoDongleModel entity with the given wiki IDs and values.
+     * @param wikiIdsAndValues a map of wiki IDs and their corresponding values
+     * @return a new IoDongleModel entity with the given wiki IDs and values
+     */
+    public IoDongleModel manuallyCreateDongleModel(
+        Map<String, String> wikiIdsAndValues
+    ) {
+        IoDongleModel dongleModel = new IoDongleModel();
+        for (Map.Entry<String, String> entry : wikiIdsAndValues.entrySet()) {
+            dongleModel.addIoWikiModel(entry.getKey(), entry.getValue());
         }
         return dongleModel;
     }

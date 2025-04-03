@@ -98,9 +98,6 @@ For more details, you can view the [file](https://github.com/xenya52/fmc003_rest
 Service
 ---------
 
-<<<<<<< HEAD
-The service package is responsible for implementing the business logic of the application. It acts as an intermediary between the controller and the repository layers. The service layer ensures that the data flow is managed correctly and that the business rules are applied consistently.
-=======
 The service package is responsible for implementing the business logic of the application. It acts as an intermediary between the controller and the repository layers.
 It is separated into two parts.
 
@@ -111,7 +108,6 @@ Heres everything what is important to parse the key values of the dongle model i
 ### IoDongle
 
 The IoDongle folder is responsible for accepting dongleDate and implementing functions to get some dumby data for debugging reasons.
->>>>>>> 8b37da380e7df636f7d34ef0f5c4679ac4875084
 
 Controller
 ---------

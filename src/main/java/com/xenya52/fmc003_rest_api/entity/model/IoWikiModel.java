@@ -2,6 +2,8 @@ package com.xenya52.fmc003_rest_api.entity.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.data.annotation.Id;
 
 public class IoWikiModel implements IIo {

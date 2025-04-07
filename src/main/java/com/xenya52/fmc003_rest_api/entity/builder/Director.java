@@ -69,6 +69,15 @@ public class Director {
                 wikiModel.getWikiName()
             );
         }
-        builder.setIoWikiList(wikiIdAndDongleValues);
+        builder.setDongleIdsAndVales(wikiIdAndDongleValues);
+    }
+
+    public void constructDongleWikiIdsDongleValuesManually(
+        IBuilder builder,
+        Map<String, String> wikiIdAndDongleValues
+    ) {
+        builder.reset();
+        builder.setId(createRandomDongleID());
+        builder.setDongleIdsAndVales(wikiIdAndDongleValues);
     }
 }

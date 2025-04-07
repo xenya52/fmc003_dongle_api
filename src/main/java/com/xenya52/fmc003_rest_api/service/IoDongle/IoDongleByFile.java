@@ -3,8 +3,8 @@ package com.xenya52.fmc003_rest_api.service.IoDongle;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonAppend.Attr;
-import com.xenya52.fmc003_rest_api.entity.factory.DongleFactory;
+import com.xenya52.fmc003_rest_api.entity.builder.Director;
+import com.xenya52.fmc003_rest_api.entity.builder.TeltonikaDongleDataBuilder;
 import com.xenya52.fmc003_rest_api.entity.model.IoDongleModel;
 import com.xenya52.fmc003_rest_api.repository.IoWikiRepository;
 import java.io.File;
@@ -31,7 +31,7 @@ public class IoDongleByFile {
     IoWikiRepository ioWikiRepository;
 
     @Autowired
-    DongleFactory dongleFactory;
+    Director director;
 
     // Default file path TODO make this configurable OR a generator for dumb data
     final String defaultFilePath =
@@ -169,14 +169,20 @@ public class IoDongleByFile {
 
             List<String> base64Strings = parseJsonBody(jsonString);
 
-            List<Map<String, String>> dongleIdsAndValues = decodeBase64List(
-                base64Strings
-            );
+            List<Map<String, String>> wikiIdAndDongleValuesList =
+                decodeBase64List(base64Strings);
 
-            for (Map<String, String> dongleIdAndValue : dongleIdsAndValues) {
-                IoDongleModel dongleModel =
-                    dongleFactory.manuallyCreateDongleModel(dongleIdAndValue);
-                dongleList.add(dongleModel);
+            for (Map<
+                String,
+                String
+            > wikiIdAndDongleValues : wikiIdAndDongleValuesList) {
+                TeltonikaDongleDataBuilder builder =
+                    new TeltonikaDongleDataBuilder();
+                !director.constructDongleWikiIdsDongleValuesManually( // TODO evaluate if i need a manual builder
+                    builder,
+                    wikiIdAndDongleValues
+                );
+                dongleList.add(builder.getResult());
             }
         } catch (FileNotFoundException e) {
             LOGGER.log(Level.SEVERE, "File not found: {0}", e.getMessage());

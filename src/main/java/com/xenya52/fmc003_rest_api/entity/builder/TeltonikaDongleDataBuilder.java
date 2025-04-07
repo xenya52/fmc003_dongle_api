@@ -20,7 +20,9 @@ public class TeltonikaDongleDataBuilder implements IBuilder {
     }
 
     @Override
-    public void setIoWikiList(Map<String, String> wikiIdAndDongleValues) {
+    public void setDongleIdsAndVales(
+        Map<String, String> wikiIdAndDongleValues
+    ) {
         this.wikiIdAndDongleValues = wikiIdAndDongleValues;
     }
 

@@ -1,7 +1,8 @@
 package com.xenya52.fmc003_rest_api.service.IoDongle;
 
+import com.xenya52.fmc003_rest_api.entity.builder.Director;
+import com.xenya52.fmc003_rest_api.entity.builder.TeltonikaDongleDataBuilder;
 import com.xenya52.fmc003_rest_api.entity.dto.GetResponseDto;
-import com.xenya52.fmc003_rest_api.entity.factory.DongleFactory;
 import com.xenya52.fmc003_rest_api.entity.model.IoDongleModel;
 import com.xenya52.fmc003_rest_api.repository.IoDongleRepository;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class IoDongleService {
     private IoDongleRepository ioDongleRepository;
 
     @Autowired
-    private DongleFactory dongleFactory;
+    private Director director;
 
     // Constructors
     public IoDongleService() {}
@@ -49,9 +50,14 @@ public class IoDongleService {
         List<IoDongleModel> dongleModels = new ArrayList<>();
 
         for (int i = 0; i < dongleAmount; i++) {
-            IoDongleModel dongleModel =
-                dongleFactory.generateIoDongleModelWithNoneValues(wikiAmount);
-            dongleModels.add(dongleModel);
+            TeltonikaDongleDataBuilder builder =
+                new TeltonikaDongleDataBuilder();
+
+            director.constructRandomDongleWithSpecificAmountIoWikiValues(
+                builder,
+                wikiAmount
+            );
+            dongleModels.add(builder.getResult());
         }
         return saveIoDongleList(dongleModels);
     }

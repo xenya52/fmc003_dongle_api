@@ -7,5 +7,5 @@ public interface IBuilder {
 
     public void setId(String id);
 
-    public void setIoWikiList(Map<String, String> wikiIdAndDongleValues);
+    public void setDongleIdsAndVales(Map<String, String> wikiIdAndDongleValues);
 }

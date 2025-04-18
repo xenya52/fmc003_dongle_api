@@ -1,13 +1,8 @@
 package com.xenya52.fmc003_rest_api.entity.builder;
 
 import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
-import com.xenya52.fmc003_rest_api.service.IoWiki.IoWikiByFile;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-public class Director {
+public class TeltonikaDongleBuilderUtils {
 
     /**
      * Generates a random ID as a string.
@@ -67,15 +62,6 @@ public class Director {
                 wikiModel.getWikiName()
             );
         }
-        builder.setDongleIdsAndVales(wikiIdAndDongleValues);
-    }
-
-    public void constructDongleWikiIdsDongleValuesManually(
-        IBuilder builder,
-        Map<String, String> wikiIdAndDongleValues
-    ) {
-        builder.reset();
-        builder.setId(createRandomDongleID());
         builder.setDongleIdsAndVales(wikiIdAndDongleValues);
     }
 }

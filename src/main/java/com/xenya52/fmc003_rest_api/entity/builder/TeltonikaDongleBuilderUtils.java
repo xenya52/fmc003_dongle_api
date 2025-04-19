@@ -1,6 +1,11 @@
 package com.xenya52.fmc003_rest_api.entity.builder;
 
 import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
+import com.xenya52.fmc003_rest_api.service.IoWiki.IoWikiByFile;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TeltonikaDongleBuilderUtils {
 
@@ -8,7 +13,7 @@ public class TeltonikaDongleBuilderUtils {
      * Generates a random ID as a string.
      * @return a random ID as a string
      */
-    private String createRandomDongleID() {
+    public String createRandomDongleID() {
         int random = (int) (Math.random() * 1000000);
         return String.valueOf(random);
     }
@@ -21,8 +26,7 @@ public class TeltonikaDongleBuilderUtils {
 
      * @return a map of wiki IDs and their corresponding random values
     */
-    private List<IoWikiModel> generateIoWikiListByFile(int ioWikiAmount) {
-        String id = createRandomDongleID();
+    public List<IoWikiModel> generateIoWikiListByFile(int ioWikiAmount) {
         IoWikiByFile wikiByFile = new IoWikiByFile();
         List<IoWikiModel> allWikiModels =
             wikiByFile.advancedDongleModelsByFile();
@@ -39,29 +43,5 @@ public class TeltonikaDongleBuilderUtils {
             }
         }
         return finalWikiModels;
-    }
-
-    /**
-     * Constructs a Teltonika dongle with the given builder.
-     *
-     * @param builder The builder to use for constructing the dongle.
-     */
-    public void constructRandomDongleWithSpecificAmountIoWikiValues(
-        IBuilder builder,
-        int ioWikiAmount
-    ) {
-        builder.reset();
-        builder.setId(createRandomDongleID());
-
-        List<IoWikiModel> ioWikiModels = generateIoWikiListByFile(ioWikiAmount);
-        Map<String, String> wikiIdAndDongleValues = new HashMap<>();
-
-        for (IoWikiModel wikiModel : ioWikiModels) {
-            wikiIdAndDongleValues.put(
-                wikiModel.getWikiId(),
-                wikiModel.getWikiName()
-            );
-        }
-        builder.setDongleIdsAndVales(wikiIdAndDongleValues);
     }
 }

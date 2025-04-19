@@ -9,42 +9,8 @@ import java.util.Map;
 
 public class Director {
 
-    /**
-     * Generates a random ID as a string.
-     * @return a random ID as a string
-     */
-    private String createRandomDongleID() {
-        int random = (int) (Math.random() * 1000000);
-        return String.valueOf(random);
-    }
-
-    /**
-     * Generates random IoWiki values for the given wiki IDs
-
-     * @param wikiIds the list of wiki IDs to generate values for
-     * @param ioWikiAmount the number of IoWikiModels to add to the IoDongleModel
-
-     * @return a map of wiki IDs and their corresponding random values
-    */
-    private List<IoWikiModel> generateIoWikiListByFile(int ioWikiAmount) {
-        String id = createRandomDongleID();
-        IoWikiByFile wikiByFile = new IoWikiByFile();
-        List<IoWikiModel> allWikiModels =
-            wikiByFile.advancedDongleModelsByFile();
-        List<IoWikiModel> finalWikiModels = new ArrayList<>();
-        int addedCount = 0;
-
-        for (IoWikiModel wikiModel : allWikiModels) {
-            if (addedCount >= ioWikiAmount) {
-                break;
-            }
-            if (Math.random() > 0.5) {
-                finalWikiModels.add(wikiModel);
-                addedCount++;
-            }
-        }
-        return finalWikiModels;
-    }
+    // Attributes
+    private TeltonikaDongleBuilderUtils teltonikaDongleBuilderUtils;
 
     /**
      * Constructs a Teltonika dongle with the given builder.
@@ -56,9 +22,10 @@ public class Director {
         int ioWikiAmount
     ) {
         builder.reset();
-        builder.setId(createRandomDongleID());
+        builder.setId(teltonikaDongleBuilderUtils.createRandomDongleID());
 
-        List<IoWikiModel> ioWikiModels = generateIoWikiListByFile(ioWikiAmount);
+        List<IoWikiModel> ioWikiModels =
+            teltonikaDongleBuilderUtils.generateIoWikiListByFile(ioWikiAmount);
         Map<String, String> wikiIdAndDongleValues = new HashMap<>();
 
         for (IoWikiModel wikiModel : ioWikiModels) {
@@ -75,7 +42,7 @@ public class Director {
         Map<String, String> wikiIdAndDongleValues
     ) {
         builder.reset();
-        builder.setId(createRandomDongleID());
+        builder.setId(teltonikaDongleBuilderUtils.createRandomDongleID());
         builder.setDongleIdsAndVales(wikiIdAndDongleValues);
     }
 }

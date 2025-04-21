@@ -3,7 +3,7 @@ package com.xenya52.fmc003_rest_api.service.IoDongle;
 import com.xenya52.fmc003_rest_api.entity.builder.Director;
 import com.xenya52.fmc003_rest_api.entity.builder.TeltonikaDongleDataBuilder;
 import com.xenya52.fmc003_rest_api.entity.dto.GetResponseDto;
-import com.xenya52.fmc003_rest_api.entity.model.IoDongleModel;
+import com.xenya52.fmc003_rest_api.entity.model.carDongle.TeltonikaDongle;
 import com.xenya52.fmc003_rest_api.repository.IoDongleRepository;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -47,7 +47,7 @@ public class IoDongleService {
         int dongleAmount,
         int wikiAmount
     ) {
-        List<IoDongleModel> dongleModels = new ArrayList<>();
+        List<TeltonikaDongle> dongleModels = new ArrayList<>();
 
         for (int i = 0; i < dongleAmount; i++) {
             TeltonikaDongleDataBuilder builder =
@@ -67,8 +67,8 @@ public class IoDongleService {
      * @param ioDongleModels List of IoDongleModel entities to be saved.
      * @return true if all entities are saved successfully.
      */
-    public boolean saveIoDongleList(List<IoDongleModel> ioDongleModels) {
-        for (IoDongleModel ioDongleModel : ioDongleModels) {
+    public boolean saveIoDongleList(List<TeltonikaDongle> ioDongleModels) {
+        for (TeltonikaDongle ioDongleModel : ioDongleModels) {
             saveIoDongle(ioDongleModel);
         }
         return true;
@@ -79,10 +79,10 @@ public class IoDongleService {
      * @return List of GetResponseDto containing all IoDongle entities.
      */
     public List<GetResponseDto> getIoDongleList() {
-        List<IoDongleModel> ioDongleModelList = ioDongleRepository.findAll();
+        List<TeltonikaDongle> ioDongleModelList = ioDongleRepository.findAll();
         List<GetResponseDto> ioDongleDtoList = new ArrayList<>();
 
-        for (IoDongleModel ioDongleModel : ioDongleModelList) {
+        for (TeltonikaDongle ioDongleModel : ioDongleModelList) {
             // Next and Previous id are unnecessary if I get the whole list. Furthermore it saves time
             ioDongleDtoList.add(new GetResponseDto(ioDongleModel, null));
         }
@@ -116,7 +116,7 @@ public class IoDongleService {
      */
     private GetResponseDto getIoDongleById(String id) {
         try {
-            IoDongleModel dongleModel = ioDongleRepository
+            TeltonikaDongle dongleModel = ioDongleRepository
                 .findByDeviceId(id)
                 .orElse(null);
             Map<String, String> links = Map.of(
@@ -156,7 +156,7 @@ public class IoDongleService {
      * @param ioDongleModel IoDongle entity to be saved.
      * @return The saved IoDongle entity.
      */
-    public IoDongleModel saveIoDongle(IoDongleModel ioDongleModel) {
+    public TeltonikaDongle saveIoDongle(TeltonikaDongle ioDongleModel) {
         try {
             return ioDongleRepository.save(ioDongleModel);
         } catch (IllegalArgumentException iae) {
@@ -187,7 +187,7 @@ public class IoDongleService {
      * @param ioDongleModel IoDongle entity to be updated.
      * @return The updated IoDongle entity, or null if the entity does not exist.
      */
-    public IoDongleModel updateIoDongle(IoDongleModel ioDongleModel) {
+    public TeltonikaDongle updateIoDongle(TeltonikaDongle ioDongleModel) {
         if (!ioDongleRepository.existsById(ioDongleModel.getDeviceId())) {
             return null;
         }
@@ -213,10 +213,10 @@ public class IoDongleService {
      * @return The previous ID in the list.
      */
     private String getPrevId(String id) {
-        List<IoDongleModel> ioDongleModelList = ioDongleRepository.findAll();
+        List<TeltonikaDongle> ioDongleModelList = ioDongleRepository.findAll();
         try {
             ioDongleModelList.sort(
-                Comparator.comparing(IoDongleModel::getDeviceId)
+                Comparator.comparing(TeltonikaDongle::getDeviceId)
             );
             int index = 0;
             for (int i = 0; i < ioDongleModelList.size(); i++) {
@@ -251,10 +251,10 @@ public class IoDongleService {
      * @return The next ID in the list.
      */
     private String getNextId(String id) {
-        List<IoDongleModel> ioDongleModelList = ioDongleRepository.findAll();
+        List<TeltonikaDongle> ioDongleModelList = ioDongleRepository.findAll();
         try {
             ioDongleModelList.sort(
-                Comparator.comparing(IoDongleModel::getDeviceId)
+                Comparator.comparing(TeltonikaDongle::getDeviceId)
             );
             int index = 0;
             for (int i = 0; i < ioDongleModelList.size(); i++) {

@@ -1,12 +1,5 @@
-package com.xenya52.fmc003_rest_api.service.IoDongle;
+package com.xenya52.fmc003_rest_api.service.teltonika.dongle;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.xenya52.fmc003_rest_api.entity.builder.Director;
-import com.xenya52.fmc003_rest_api.entity.builder.TeltonikaDongleDataBuilder;
-import com.xenya52.fmc003_rest_api.entity.model.IoDongleModel;
-import com.xenya52.fmc003_rest_api.repository.IoWikiRepository;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -17,18 +10,28 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import com.xenya52.fmc003_rest_api.entity.builder.Director;
+import com.xenya52.fmc003_rest_api.entity.builder.TeltonikaDongleDataBuilder;
+import com.xenya52.fmc003_rest_api.entity.model.teltonika.dongle.TeltonikaFmc003DongleModel;
+import com.xenya52.fmc003_rest_api.repository.TeltonikaIoWikiRepository;
 
 /**
  * Class responsible for handling IoDongle data from a file.
  */
 @Component
-public class IoDongleByFile {
+public class teltonikaFmc003DongleFileService {
 
     // Attributes
     @Autowired
-    IoWikiRepository ioWikiRepository;
+    TeltonikaIoWikiRepository teltonikaIoWikiRepository;
 
     @Autowired
     Director director;
@@ -38,7 +41,7 @@ public class IoDongleByFile {
         "src/main/resources/teltonikaDongleDataDumby.txt";
 
     private static final Logger LOGGER = Logger.getLogger(
-        IoDongleByFile.class.getName()
+        teltonikaFmc003DongleFileService.class.getName()
     );
 
     /**
@@ -110,7 +113,7 @@ public class IoDongleByFile {
             try {
                 Map<String, Object> decodedMap = objectMapper.readValue(
                     decodedString,
-                    new TypeReference<Map<String, Object>>() {}
+                    new TypeReference<>() {}
                 );
 
                 Map<String, String> dongleIdAndValue = new HashMap<>();
@@ -155,8 +158,8 @@ public class IoDongleByFile {
      *
      * @return a list of IoDongleModel objects
      */
-    public List<IoDongleModel> dongleModelsByFile() {
-        List<IoDongleModel> dongleList = new ArrayList<>();
+    public List<TeltonikaFmc003DongleModel> dongleModelsByFile() {
+        List<TeltonikaFmc003DongleModel> dongleList = new ArrayList<>();
         File file = new File(defaultFilePath);
 
         try (Scanner scanner = new Scanner(file)) {

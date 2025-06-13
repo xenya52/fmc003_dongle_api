@@ -1,7 +1,7 @@
 package com.xenya52.fmc003_rest_api.controller.v1;
 
 import com.xenya52.fmc003_rest_api.entity.dto.GetResponseDto;
-import com.xenya52.fmc003_rest_api.service.IoWiki.IoWikiService;
+import com.xenya52.fmc003_rest_api.service.teltonika.TeltonikaIoWikiService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +21,12 @@ public class IoWikiController {
 
     // Attributes
     @Autowired
-    private IoWikiService ioWikiService;
+    private TeltonikaIoWikiService teltonikaIoWikiService;
 
     // Methods
     @GetMapping("/items/all")
     public ResponseEntity<List<GetResponseDto>> ioWikiAll() {
-        List<GetResponseDto> response = ioWikiService.getIoWikiList();
+        List<GetResponseDto> response = teltonikaIoWikiService.getAllTeltonikaIoWikiModels();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -34,7 +34,7 @@ public class IoWikiController {
     public ResponseEntity<List<GetResponseDto>> ioWikiList(
         @PathVariable List<String> listOfIds
     ) {
-        List<GetResponseDto> responseList = ioWikiService.getIoWikiListById(
+        List<GetResponseDto> responseList = teltonikaIoWikiService.getTeltonikaIoWikiModelsById(
             listOfIds
         );
 

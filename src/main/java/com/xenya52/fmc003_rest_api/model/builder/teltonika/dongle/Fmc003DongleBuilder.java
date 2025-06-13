@@ -4,10 +4,10 @@ import java.util.List;
 
 import com.xenya52.fmc003_rest_api.entity.model.IDongleModel;
 import com.xenya52.fmc003_rest_api.entity.model.IWikiValueInDongleModel;
-import com.xenya52.fmc003_rest_api.entity.model.teltonika.builder.IDongleBuilder;
-import com.xenya52.fmc003_rest_api.entity.model.teltonika.dongle.IoWikiValueInFmc003DongleModelModel;
+import com.xenya52.fmc003_rest_api.entity.model.builder.IDongleBuilder;
 
 import com.xenya52.fmc003_rest_api.entity.model.teltonika.dongle.TeltonikaFmc003DongleModel;
+
 import lombok.Setter;
 
 @Setter
@@ -22,7 +22,7 @@ public class Fmc003DongleBuilder implements IDongleBuilder {
             dongleId,
                 wikiValues
                         .stream()
-                        .map(v -> (IoWikiValueInFmc003DongleModelModel) v)
+                        .map(v -> (com.xenya52.fmc003_rest_api.entity.model.teltonika.dongle.IoWikiValueInFmc003DongleModel) v)
                         .toList()
         );
     }

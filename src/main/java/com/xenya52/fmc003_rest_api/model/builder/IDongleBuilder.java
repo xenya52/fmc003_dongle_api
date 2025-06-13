@@ -1,4 +1,4 @@
-package com.xenya52.fmc003_rest_api.entity.model.teltonika.builder;
+package com.xenya52.fmc003_rest_api.entity.model.builder;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
-package com.xenya52.fmc003_rest_api.service.IoWiki;
+package com.xenya52.fmc003_rest_api.service.teltonika;
 
-import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
+import com.xenya52.fmc003_rest_api.entity.model.teltonika.TeltonikaIoWikiModel;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,13 +10,14 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.springframework.stereotype.Component;
 
 @Component
-public class IoWikiByFile {
+public class TeltonikaIoWikiFileService {
 
     private static final Logger LOGGER = Logger.getLogger(
-        IoWikiByFile.class.getName()
+        TeltonikaIoWikiFileService.class.getName()
     );
 
     // Attributes
@@ -29,8 +30,8 @@ public class IoWikiByFile {
      *
      * @return a list of IoWikiModel objects containing the advanced dongle models.
      */
-    public List<IoWikiModel> advancedDongleModelsByFile() {
-        List<IoWikiModel> ioWikiResponses = new ArrayList<>();
+    public List<TeltonikaIoWikiModel> advancedDongleModelsByFile() {
+        List<TeltonikaIoWikiModel> ioWikiResponses = new ArrayList<>();
 
         String dataSendingParameters = "";
         try (Scanner scanner = new Scanner(new File(advancedDefaultFilePath))) {
@@ -81,7 +82,7 @@ public class IoWikiByFile {
                         String description = bufReader
                             .readLine()
                             .split(">")[1].split("<")[0];
-                        IoWikiModel ioWikiResponse = new IoWikiModel(
+                        TeltonikaIoWikiModel ioWikiResponse = new TeltonikaIoWikiModel(
                             id,
                             name,
                             responseType,
@@ -124,8 +125,8 @@ public class IoWikiByFile {
      *
      * @return a list of IoWikiModel objects containing the dongle models.
      */
-    public List<IoWikiModel> dongleModelsByFile() {
-        List<IoWikiModel> content = new ArrayList<>();
+    public List<TeltonikaIoWikiModel> dongleModelsByFile() {
+        List<TeltonikaIoWikiModel> content = new ArrayList<>();
         String filePath = defaultFilePath;
 
         try (Scanner myReader = new Scanner(new File(filePath))) {
@@ -137,7 +138,7 @@ public class IoWikiByFile {
                     String[] items = part.split("=");
 
                     if (items.length == 2) {
-                        IoWikiModel model = new IoWikiModel(
+                        TeltonikaIoWikiModel model = new TeltonikaIoWikiModel(
                             items[0].replace("{", "").replace(" ", ""),
                             items[1].replace("}", "")
                         );

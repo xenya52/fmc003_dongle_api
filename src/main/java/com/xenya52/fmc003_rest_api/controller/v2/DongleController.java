@@ -1,9 +1,9 @@
 package com.xenya52.fmc003_rest_api.controller.v2;
 
 import com.xenya52.fmc003_rest_api.entity.dto.GetResponseDto;
-import com.xenya52.fmc003_rest_api.entity.model.IoDongleModel;
-import com.xenya52.fmc003_rest_api.service.IoDongle.IoDongleByFile;
-import com.xenya52.fmc003_rest_api.service.IoDongle.IoDongleService;
+import com.xenya52.fmc003_rest_api.entity.model.teltonika.dongle.TeltonikaFmc003DongleModel;
+import com.xenya52.fmc003_rest_api.service.teltonika.dongle.teltonikaFmc003DongleFileService;
+import com.xenya52.fmc003_rest_api.service.teltonika.dongle.TeltonikaFmc003DongleService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -21,10 +21,10 @@ public class DongleController {
 
     // Attributes
     @Autowired
-    private IoDongleService dongleService;
+    private TeltonikaFmc003DongleService dongleService;
 
     @Autowired
-    private IoDongleByFile fileIoDongle;
+    private teltonikaFmc003DongleFileService fileIoDongle;
 
     /**
      * Retrieves a list of IoDongle items by their IDs.
@@ -67,7 +67,7 @@ public class DongleController {
      */
     @PostMapping("/fetch-default-values-into-db")
     public ResponseEntity<String> fetchFile() {
-        List<IoDongleModel> dongleList;
+        List<TeltonikaFmc003DongleModel> dongleList;
         dongleList = fileIoDongle.dongleModelsByFile();
 
         if (dongleList == null) {
@@ -103,10 +103,10 @@ public class DongleController {
      * @return ResponseEntity containing the created IoDongleModel object and HTTP status.
      */
     @PostMapping("/create")
-    public ResponseEntity<IoDongleModel> createDongle(
-        @RequestBody IoDongleModel dongleModel
+    public ResponseEntity<TeltonikaFmc003DongleModel> createDongle(
+        @RequestBody TeltonikaFmc003DongleModel dongleModel
     ) {
-        IoDongleModel createdDongle = dongleService.saveIoDongle(dongleModel);
+        TeltonikaFmc003DongleModel createdDongle = dongleService.saveIoDongle(dongleModel);
         return new ResponseEntity<>(createdDongle, HttpStatus.CREATED);
     }
 
@@ -117,10 +117,10 @@ public class DongleController {
      * @return ResponseEntity containing the updated IoDongleModel object and HTTP status.
      */
     @PostMapping("/update")
-    public ResponseEntity<IoDongleModel> updateDongle(
-        @RequestBody IoDongleModel dongleModel
+    public ResponseEntity<TeltonikaFmc003DongleModel> updateDongle(
+        @RequestBody TeltonikaFmc003DongleModel dongleModel
     ) {
-        IoDongleModel updatedDongle = dongleService.updateIoDongle(dongleModel);
+        TeltonikaFmc003DongleModel updatedDongle = dongleService.updateIoDongle(dongleModel);
         if (updatedDongle == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

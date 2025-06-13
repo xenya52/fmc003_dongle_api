@@ -1,28 +1,30 @@
-package com.xenya52.fmc003_rest_api.service.IoDongle;
+package com.xenya52.fmc003_rest_api.service.teltonika.dongle;
 
-import com.xenya52.fmc003_rest_api.entity.builder.Director;
-import com.xenya52.fmc003_rest_api.entity.builder.TeltonikaDongleDataBuilder;
-import com.xenya52.fmc003_rest_api.entity.dto.GetResponseDto;
-import com.xenya52.fmc003_rest_api.entity.model.carDongle.TeltonikaDongle;
-import com.xenya52.fmc003_rest_api.repository.IoDongleRepository;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
+
+import com.xenya52.fmc003_rest_api.entity.builder.Director;
+import com.xenya52.fmc003_rest_api.entity.builder.TeltonikaDongleDataBuilder;
+import com.xenya52.fmc003_rest_api.entity.dto.GetResponseDto;
+import com.xenya52.fmc003_rest_api.entity.model.teltonika.dongle.TeltonikaFmc003DongleModel;
+import com.xenya52.fmc003_rest_api.repository.IoDongleRepository;
 
 /**
  * Service class for managing IoDongle entities.
  */
 @Component
-public class IoDongleService {
+public class TeltonikaFmc003DongleService {
 
     private static final Logger LOGGER = Logger.getLogger(
-        IoDongleService.class.getName()
+        TeltonikaFmc003DongleService.class.getName()
     );
 
     // Attributes
@@ -33,7 +35,7 @@ public class IoDongleService {
     private Director director;
 
     // Constructors
-    public IoDongleService() {}
+    public TeltonikaFmc003DongleService() {}
 
     // Methods
 
@@ -47,7 +49,7 @@ public class IoDongleService {
         int dongleAmount,
         int wikiAmount
     ) {
-        List<TeltonikaDongle> dongleModels = new ArrayList<>();
+        List<TeltonikaFmc003DongleModel> dongleModels = new ArrayList<>();
 
         for (int i = 0; i < dongleAmount; i++) {
             TeltonikaDongleDataBuilder builder =
@@ -64,12 +66,12 @@ public class IoDongleService {
 
     /**
      * Saves a list of IoDongleModel entities.
-     * @param ioDongleModels List of IoDongleModel entities to be saved.
+     * @param teltonikaFmc003DongleModels List of IoDongleModel entities to be saved.
      * @return true if all entities are saved successfully.
      */
-    public boolean saveIoDongleList(List<TeltonikaDongle> ioDongleModels) {
-        for (TeltonikaDongle ioDongleModel : ioDongleModels) {
-            saveIoDongle(ioDongleModel);
+    public boolean saveIoDongleList(List<TeltonikaFmc003DongleModel> teltonikaFmc003DongleModels) {
+        for (TeltonikaFmc003DongleModel teltonikaFmc003DongleModel : teltonikaFmc003DongleModels) {
+            saveIoDongle(teltonikaFmc003DongleModel);
         }
         return true;
     }
@@ -79,12 +81,12 @@ public class IoDongleService {
      * @return List of GetResponseDto containing all IoDongle entities.
      */
     public List<GetResponseDto> getIoDongleList() {
-        List<TeltonikaDongle> ioDongleModelList = ioDongleRepository.findAll();
+        List<TeltonikaFmc003DongleModel> teltonikaFmc003DongleModelList = ioDongleRepository.findAll();
         List<GetResponseDto> ioDongleDtoList = new ArrayList<>();
 
-        for (TeltonikaDongle ioDongleModel : ioDongleModelList) {
+        for (TeltonikaFmc003DongleModel teltonikaFmc003DongleModel : teltonikaFmc003DongleModelList) {
             // Next and Previous id are unnecessary if I get the whole list. Furthermore it saves time
-            ioDongleDtoList.add(new GetResponseDto(ioDongleModel, null));
+            ioDongleDtoList.add(new GetResponseDto(teltonikaFmc003DongleModel, null));
         }
         return ioDongleDtoList;
     }
@@ -116,7 +118,7 @@ public class IoDongleService {
      */
     private GetResponseDto getIoDongleById(String id) {
         try {
-            TeltonikaDongle dongleModel = ioDongleRepository
+            TeltonikaFmc003DongleModel dongleModel = ioDongleRepository
                 .findByDeviceId(id)
                 .orElse(null);
             Map<String, String> links = Map.of(
@@ -153,12 +155,12 @@ public class IoDongleService {
 
     /**
      * Saves an IoDongle entity.
-     * @param ioDongleModel IoDongle entity to be saved.
+     * @param teltonikaFmc003DongleModel IoDongle entity to be saved.
      * @return The saved IoDongle entity.
      */
-    public TeltonikaDongle saveIoDongle(TeltonikaDongle ioDongleModel) {
+    public TeltonikaFmc003DongleModel saveIoDongle(TeltonikaFmc003DongleModel teltonikaFmc003DongleModel) {
         try {
-            return ioDongleRepository.save(ioDongleModel);
+            return ioDongleRepository.save(teltonikaFmc003DongleModel);
         } catch (IllegalArgumentException iae) {
             LOGGER.log(
                 Level.SEVERE,
@@ -184,14 +186,14 @@ public class IoDongleService {
 
     /**
      * Updates an existing IoDongle entity.
-     * @param ioDongleModel IoDongle entity to be updated.
+     * @param teltonikaFmc003DongleModel IoDongle entity to be updated.
      * @return The updated IoDongle entity, or null if the entity does not exist.
      */
-    public TeltonikaDongle updateIoDongle(TeltonikaDongle ioDongleModel) {
-        if (!ioDongleRepository.existsById(ioDongleModel.getDeviceId())) {
+    public TeltonikaFmc003DongleModel updateIoDongle(TeltonikaFmc003DongleModel teltonikaFmc003DongleModel) {
+        if (!ioDongleRepository.existsById(teltonikaFmc003DongleModel.getDeviceId())) {
             return null;
         }
-        return saveIoDongle(ioDongleModel);
+        return saveIoDongle(teltonikaFmc003DongleModel);
     }
 
     /**
@@ -213,24 +215,24 @@ public class IoDongleService {
      * @return The previous ID in the list.
      */
     private String getPrevId(String id) {
-        List<TeltonikaDongle> ioDongleModelList = ioDongleRepository.findAll();
+        List<TeltonikaFmc003DongleModel> teltonikaFmc003DongleModelList = ioDongleRepository.findAll();
         try {
-            ioDongleModelList.sort(
-                Comparator.comparing(TeltonikaDongle::getDeviceId)
+            teltonikaFmc003DongleModelList.sort(
+                Comparator.comparing(TeltonikaFmc003DongleModel::getDeviceId)
             );
             int index = 0;
-            for (int i = 0; i < ioDongleModelList.size(); i++) {
-                if (ioDongleModelList.get(i).getDeviceId().equals(id)) {
+            for (int i = 0; i < teltonikaFmc003DongleModelList.size(); i++) {
+                if (teltonikaFmc003DongleModelList.get(i).getDeviceId().equals(id)) {
                     index = i;
                     break;
                 }
             }
             if (index == 0) {
-                return ioDongleModelList
-                    .get(ioDongleModelList.size() - 1)
+                return teltonikaFmc003DongleModelList
+                    .get(teltonikaFmc003DongleModelList.size() - 1)
                     .getDeviceId();
             } else {
-                return ioDongleModelList.get(index - 1).getDeviceId();
+                return teltonikaFmc003DongleModelList.get(index - 1).getDeviceId();
             }
         } catch (NullPointerException npe) {
             LOGGER.log(
@@ -251,22 +253,22 @@ public class IoDongleService {
      * @return The next ID in the list.
      */
     private String getNextId(String id) {
-        List<TeltonikaDongle> ioDongleModelList = ioDongleRepository.findAll();
+        List<TeltonikaFmc003DongleModel> teltonikaFmc003DongleModelList = ioDongleRepository.findAll();
         try {
-            ioDongleModelList.sort(
-                Comparator.comparing(TeltonikaDongle::getDeviceId)
+            teltonikaFmc003DongleModelList.sort(
+                Comparator.comparing(TeltonikaFmc003DongleModel::getDeviceId)
             );
             int index = 0;
-            for (int i = 0; i < ioDongleModelList.size(); i++) {
-                if (ioDongleModelList.get(i).getDeviceId().equals(id)) {
+            for (int i = 0; i < teltonikaFmc003DongleModelList.size(); i++) {
+                if (teltonikaFmc003DongleModelList.get(i).getDeviceId().equals(id)) {
                     index = i;
                     break;
                 }
             }
-            if (index == ioDongleModelList.size() - 1) {
-                return ioDongleModelList.get(0).getDeviceId();
+            if (index == teltonikaFmc003DongleModelList.size() - 1) {
+                return teltonikaFmc003DongleModelList.get(0).getDeviceId();
             } else {
-                return ioDongleModelList.get(index + 1).getDeviceId();
+                return teltonikaFmc003DongleModelList.get(index + 1).getDeviceId();
             }
         } catch (NullPointerException npe) {
             LOGGER.log(

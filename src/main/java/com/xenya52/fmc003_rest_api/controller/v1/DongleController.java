@@ -1,7 +1,7 @@
 package com.xenya52.fmc003_rest_api.controller.v1;
 
 import com.xenya52.fmc003_rest_api.entity.dto.GetResponseDto;
-import com.xenya52.fmc003_rest_api.service.IoDongle.IoDongleService;
+import com.xenya52.fmc003_rest_api.service.teltonika.dongle.TeltonikaFmc003DongleService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -19,7 +19,7 @@ public class DongleController {
 
     // Attributes
     @Autowired
-    private IoDongleService dongleService;
+    private TeltonikaFmc003DongleService dongleService;
 
     // Methods
     @GetMapping("/items/{listOfIds}")

@@ -1,4 +1,4 @@
-package com.xenya52.fmc003_rest_api.service.IoWiki;
+package com.xenya52.fmc003_rest_api.service.teltonika;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -18,10 +18,10 @@ import org.springframework.stereotype.Component;
  * @brief This class is responsible for scraping the Teltonika wiki and returning the data sending parameters.
  */
 @Component
-public class ScrapeTeltonikaIoWiki {
+public class TeltonikaIoWikiScraperService {
 
     private static final Logger LOGGER = Logger.getLogger(
-        ScrapeTeltonikaIoWiki.class.getName()
+        TeltonikaIoWikiScraperService.class.getName()
     );
 
     // Attributes

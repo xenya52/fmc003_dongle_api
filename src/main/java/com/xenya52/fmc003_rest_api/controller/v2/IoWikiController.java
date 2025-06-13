@@ -1,10 +1,10 @@
 package com.xenya52.fmc003_rest_api.controller.v2;
 
 import com.xenya52.fmc003_rest_api.entity.dto.GetResponseDto;
-import com.xenya52.fmc003_rest_api.entity.model.IoWikiModel;
-import com.xenya52.fmc003_rest_api.service.IoWiki.IoWikiByFile;
-import com.xenya52.fmc003_rest_api.service.IoWiki.IoWikiService;
-import com.xenya52.fmc003_rest_api.service.IoWiki.ScrapeTeltonikaIoWiki;
+import com.xenya52.fmc003_rest_api.entity.model.teltonika.TeltonikaIoWikiModel;
+import com.xenya52.fmc003_rest_api.service.teltonika.TeltonikaIoWikiFileService;
+import com.xenya52.fmc003_rest_api.service.teltonika.TeltonikaIoWikiService;
+import com.xenya52.fmc003_rest_api.service.teltonika.TeltonikaIoWikiScraperService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -28,18 +28,18 @@ public class IoWikiController {
 
     // Attributes
     @Autowired
-    private IoWikiService ioWikiService;
+    private TeltonikaIoWikiService teltonikaIoWikiService;
 
     @Autowired
-    private IoWikiByFile fileIoWikis;
+    private TeltonikaIoWikiFileService fileIoWikis;
 
     @Autowired
-    private ScrapeTeltonikaIoWiki scrapeTeltonikaIoWiki;
+    private TeltonikaIoWikiScraperService teltonikaIoWikiScraperService;
 
     // Methods
     @GetMapping("/items/all")
     public ResponseEntity<List<GetResponseDto>> ioWikiAll() {
-        List<GetResponseDto> response = ioWikiService.getIoWikiList();
+        List<GetResponseDto> response = teltonikaIoWikiService.getAllTeltonikaIoWikiModels();
         if (response.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -50,7 +50,7 @@ public class IoWikiController {
     public ResponseEntity<List<GetResponseDto>> ioWikiList(
         @PathVariable List<String> listOfIds
     ) {
-        List<GetResponseDto> responseList = ioWikiService.getIoWikiListById(
+        List<GetResponseDto> responseList = teltonikaIoWikiService.getTeltonikaIoWikiModelsById(
             listOfIds
         );
 
@@ -67,14 +67,14 @@ public class IoWikiController {
 
     @PostMapping("/fetch-default-values-into-db")
     public ResponseEntity<String> defaultValuesIntoDB() {
-        List<IoWikiModel> idsAndNames;
+        List<TeltonikaIoWikiModel> idsAndNames;
         idsAndNames = fileIoWikis.dongleModelsByFile();
 
         if (idsAndNames == null) {
             return new ResponseEntity<>("Error", HttpStatus.NOT_FOUND);
         }
 
-        if (!ioWikiService.saveIoWikiList(idsAndNames)) {
+        if (!teltonikaIoWikiService.saveTeltonikaIoWikiModels(idsAndNames)) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
         return new ResponseEntity<>(HttpStatus.OK);
@@ -82,14 +82,14 @@ public class IoWikiController {
 
     @PostMapping("/fetch-advanced-values-into-db")
     public ResponseEntity<String> advencedValuesIntoDB() {
-        List<IoWikiModel> advancedDongleModels;
+        List<TeltonikaIoWikiModel> advancedDongleModels;
         advancedDongleModels = fileIoWikis.advancedDongleModelsByFile();
 
         if (advancedDongleModels == null) {
             return new ResponseEntity<>("Error", HttpStatus.NOT_FOUND);
         }
 
-        if (!ioWikiService.saveIoWikiList(advancedDongleModels)) {
+        if (!teltonikaIoWikiService.saveTeltonikaIoWikiModels(advancedDongleModels)) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
         return new ResponseEntity<>(HttpStatus.OK);
@@ -97,7 +97,7 @@ public class IoWikiController {
 
     @PostMapping("/fetch-teltonika-io-wiki-into-file")
     public ResponseEntity<String> fetchTeltonikaIoWikiIntoFile() {
-        if (!scrapeTeltonikaIoWiki.fetchTeltonikaIoWikiIntoFile()) {
+        if (!teltonikaIoWikiScraperService.fetchTeltonikaIoWikiIntoFile()) {
             return new ResponseEntity<>("Error", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(HttpStatus.OK);
@@ -105,9 +105,9 @@ public class IoWikiController {
 
     @PostMapping("/create")
     public ResponseEntity<String> createIoWiki(
-        @RequestBody IoWikiModel ioWikiModel
+        @RequestBody TeltonikaIoWikiModel teltonikaIoWikiModel
     ) {
-        if (ioWikiService.saveIoWiki(ioWikiModel)) {
+        if (teltonikaIoWikiService.saveIoWiki(teltonikaIoWikiModel)) {
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
         return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -116,9 +116,9 @@ public class IoWikiController {
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateIoWiki(
         @PathVariable String id,
-        @RequestBody IoWikiModel ioWikiModel
+        @RequestBody TeltonikaIoWikiModel teltonikaIoWikiModel
     ) {
-        if (ioWikiService.updateIoWiki(ioWikiModel)) {
+        if (teltonikaIoWikiService.updateTeltonikaIoWikiModel(teltonikaIoWikiModel)) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -126,7 +126,7 @@ public class IoWikiController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteIoWiki(@PathVariable String id) {
-        if (ioWikiService.deleteIoWiki(id)) {
+        if (teltonikaIoWikiService.deleteTelonikaIoWikiModel(id)) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

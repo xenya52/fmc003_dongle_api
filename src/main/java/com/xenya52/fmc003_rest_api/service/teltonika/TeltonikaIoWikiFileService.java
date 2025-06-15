@@ -58,9 +58,9 @@ public class TeltonikaIoWikiFileService {
             while ((line = bufReader.readLine()) != null) {
                 if (line.contains("<tr>")) {
                     try {
-                        String id = bufReader
+                        long id = Long.parseLong(bufReader
                             .readLine()
-                            .split(">")[1].split("<")[0];
+                            .split(">")[1].split("<")[0]);
                         String name = bufReader
                             .readLine()
                             .split(">")[1].split("<")[0];
@@ -118,42 +118,5 @@ public class TeltonikaIoWikiFileService {
             throw new RuntimeException("Failed to process the file", e);
         }
         return ioWikiResponses;
-    }
-
-    /**
-     * Reads and processes the dongle models from a file.
-     *
-     * @return a list of IoWikiModel objects containing the dongle models.
-     */
-    public List<TeltonikaIoWikiModel> dongleModelsByFile() {
-        List<TeltonikaIoWikiModel> content = new ArrayList<>();
-        String filePath = defaultFilePath;
-
-        try (Scanner myReader = new Scanner(new File(filePath))) {
-            while (myReader.hasNextLine()) {
-                String line = myReader.nextLine();
-                String[] parts = line.split(",");
-
-                for (String part : parts) {
-                    String[] items = part.split("=");
-
-                    if (items.length == 2) {
-                        TeltonikaIoWikiModel model = new TeltonikaIoWikiModel(
-                            items[0].replace("{", "").replace(" ", ""),
-                            items[1].replace("}", "")
-                        );
-                        content.add(model);
-                    }
-                }
-            }
-        } catch (FileNotFoundException e) {
-            LOGGER.log(
-                Level.SEVERE,
-                "FileNotFoundException occurred while reading the file: {0}",
-                e.getMessage()
-            );
-            throw new RuntimeException("Failed to read the file", e);
-        }
-        return content;
     }
 }
